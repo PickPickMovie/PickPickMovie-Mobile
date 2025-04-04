@@ -1,4 +1,4 @@
-package com.dothebestmayb.pickpickmovie_mobile.ui.theme
+package com.dothebestmayb.pickpickmovie.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

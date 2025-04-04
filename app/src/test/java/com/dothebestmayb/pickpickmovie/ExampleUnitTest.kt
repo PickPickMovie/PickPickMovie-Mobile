@@ -1,4 +1,4 @@
-package com.dothebestmayb.pickpickmovie_mobile
+package com.dothebestmayb.pickpickmovie
 
 import org.junit.Test
 

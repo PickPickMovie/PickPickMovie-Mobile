@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.dothebestmayb.pickpickmovie_mobile"
+    namespace = "com.dothebestmayb.pickpickmovie"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.dothebestmayb.pickpickmovie_mobile"
+        applicationId = "com.dothebestmayb.pickpickmovie"
         minSdk = 28
         targetSdk = 35
         versionCode = 1

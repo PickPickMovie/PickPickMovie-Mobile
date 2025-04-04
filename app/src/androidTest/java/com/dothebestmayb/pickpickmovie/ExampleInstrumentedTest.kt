@@ -1,4 +1,4 @@
-package com.dothebestmayb.pickpickmovie_mobile
+package com.dothebestmayb.pickpickmovie
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.dothebestmayb.pickpickmovie_mobile", appContext.packageName)
+        assertEquals("com.dothebestmayb.pickpickmovie", appContext.packageName)
     }
 }

@@ -1,6 +1,5 @@
-package com.dothebestmayb.pickpickmovie_mobile.ui.theme
+package com.dothebestmayb.pickpickmovie.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -34,7 +33,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun PickPickMovieMobileTheme(
+fun PickPickMovieTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
