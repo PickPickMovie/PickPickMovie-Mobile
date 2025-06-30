@@ -3,7 +3,6 @@ package com.dothebestmayb.pickpickmovie.data.auth
 import com.dothebestmayb.pickpickmovie.data.session.AuthInfo
 import com.dothebestmayb.pickpickmovie.data.session.SessionStorage
 import retrofit2.HttpException
-import java.net.HttpURLConnection
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -18,7 +17,7 @@ class AuthRepositoryImpl @Inject constructor(
         registerCode: String
     ): AuthResult<Unit> {
         return try {
-            api.register(
+            val response = api.register(
                 request = RegisterRequest(
                     email = email,
                     password = password,
@@ -26,15 +25,14 @@ class AuthRepositoryImpl @Inject constructor(
                     registerCode = registerCode,
                 )
             )
-            login(email, password)
-        } catch (e: HttpException) {
-            if (e.code() == 401) { // unauthorized
-                AuthResult.Unauthorized()
-            } else if (e.code() == HttpURLConnection.HTTP_CONFLICT) {
-                AuthResult.Conflict(e.message())
-            } else {
-                AuthResult.UnknownError()
-            }
+            sessionStorage.set(
+                AuthInfo(
+                    accessToken = response.accessToken,
+                    refreshToken = response.refreshToken,
+                    userId = email,
+                )
+            )
+            AuthResult.Authorized()
         } catch (e: IllegalStateException) {
             AuthResult.UnknownError()
         }
