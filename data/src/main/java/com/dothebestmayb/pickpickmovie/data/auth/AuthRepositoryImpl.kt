@@ -33,7 +33,7 @@ class AuthRepositoryImpl @Inject constructor(
                 )
             )
             AuthResult.Authorized()
-        } catch (e: IllegalStateException) {
+        } catch (e: Exception) {
             AuthResult.UnknownError()
         }
     }
