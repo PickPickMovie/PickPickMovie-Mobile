@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.serialization)
 }
 
 android {
@@ -13,6 +15,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+//        buildConfigField("String", "BASE_URL", "\"https://pickpickmovie.com\"")
+        buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8085\"")
     }
 
     buildTypes {
@@ -31,20 +36,23 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
-    implementation(project(":domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.androidx.security.crptyo.ktx)
 
     implementation(libs.retrofit)
-    implementation(libs.kotlinx.serialization)
+    implementation(libs.retrofit.converter.kotlinx.serialization)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
     ksp(libs.hilt.android.compiler)
 
     testImplementation(libs.junit)

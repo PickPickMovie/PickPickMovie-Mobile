@@ -1,5 +1,6 @@
 package com.dothebestmayb.pickpickmovie.ui.screen.login
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,15 +20,18 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dothebestmayb.pickpickmovie.R
+import com.dothebestmayb.pickpickmovie.ui.common.ObserveAsEvents
 import com.dothebestmayb.pickpickmovie.ui.theme.ActionButtonColor
 import com.dothebestmayb.pickpickmovie.ui.theme.ActionButtonContentColor
 import com.dothebestmayb.pickpickmovie.ui.theme.PickPickMovieTheme
@@ -35,9 +39,45 @@ import com.dothebestmayb.pickpickmovie.ui.theme.PickPickMovieTheme
 @Composable
 fun LoginScreenRoot(
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = viewModel(),
+    onLoginSuccess: () -> Unit,
+    onRegisterClick: () -> Unit,
+    viewModel: LoginViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val state = viewModel.state.collectAsStateWithLifecycle()
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            LoginEvent.LoginFail -> {
+                Toast.makeText(
+                    context,
+                    R.string.login_fail,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+            LoginEvent.LoginSuccess -> {
+                Toast.makeText(
+                    context,
+                    R.string.login_success,
+                    Toast.LENGTH_LONG
+                ).show()
+                onLoginSuccess()
+            }
+
+            LoginEvent.RegisterClick -> {
+                onRegisterClick()
+            }
+
+            LoginEvent.LoginAlreadyInProgress -> {
+                Toast.makeText(
+                    context,
+                    R.string.login_already_in_progress,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
 
     LoginScreen(
         state = state.value,
@@ -56,7 +96,7 @@ private fun LoginScreen(
         modifier = modifier
     ) { paddingValues ->
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .padding(paddingValues)
                 .background(Color.White)
                 .fillMaxSize()
@@ -103,6 +143,7 @@ private fun LoginScreen(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Next
                 ),
+                visualTransformation = PasswordVisualTransformation(),
             )
 
             Button(
@@ -154,7 +195,12 @@ private fun LoginScreen(
 private fun LoginScreenPreview() {
     PickPickMovieTheme {
         LoginScreen(
-            state = LoginState(),
+            state = LoginState(
+                id = "123",
+                pw = "1234",
+                isLoginClickable = true,
+                isActionHandling = false,
+            ),
             onAction = {},
         )
     }

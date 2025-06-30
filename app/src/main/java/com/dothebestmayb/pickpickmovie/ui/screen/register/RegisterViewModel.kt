@@ -1,4 +1,4 @@
-package com.dothebestmayb.pickpickmovie.ui.screen.login
+package com.dothebestmayb.pickpickmovie.ui.screen.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,14 +14,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
+class RegisterViewModel @Inject constructor(
     private val authRepository: AuthRepository,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(LoginState())
+    private val _state = MutableStateFlow(RegisterState())
     val state = _state.asStateFlow()
 
-    private val eventChannel = Channel<LoginEvent> { }
+    private val eventChannel = Channel<RegisterEvent> { }
     val events = eventChannel.receiveAsFlow()
 
     init {
@@ -32,76 +32,79 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             _state.collectLatest { currentState ->
                 val isAllFieldsFilled = currentState.id.isNotBlank() &&
-                        currentState.pw.isNotBlank()
+                        currentState.pw.isNotBlank() &&
+                        currentState.pwCheck.isNotBlank() &&
+                        currentState.nickname.isNotBlank() &&
+                        currentState.registerCode.isNotBlank()
 
-                if (currentState.isLoginClickable != isAllFieldsFilled) {
+                if (currentState.isRegisterClickable != isAllFieldsFilled) {
                     _state.value = currentState.copy(
-                        isLoginClickable = isAllFieldsFilled
+                        isRegisterClickable = isAllFieldsFilled
                     )
                 }
             }
         }
     }
 
-    fun onAction(action: LoginAction) {
+    fun onAction(action: RegisterAction) {
+
         when (action) {
-            is LoginAction.OnIdChanged -> {
+            is RegisterAction.OnIdChanged -> {
                 _state.value = _state.value.copy(
                     id = action.id,
                 )
             }
 
-            LoginAction.OnLoginClick -> {
-                login()
+            is RegisterAction.OnNicknameChanged -> {
+                _state.value = _state.value.copy(
+                    nickname = action.nickname,
+                )
             }
 
-            is LoginAction.OnPwChanged -> {
+            is RegisterAction.OnPwChanged -> {
                 _state.value = _state.value.copy(
                     pw = action.pw,
                 )
             }
 
-            LoginAction.OnRegisterClick -> {
-                // 이미 처리 중인 작업이 있으면, 추가 요청을 무시함
-                if (_state.value.isActionHandling) {
-                    return
-                }
-                viewModelScope.launch {
-                    eventChannel.send(LoginEvent.RegisterClick)
-                }
+            is RegisterAction.OnPwCheckChanged -> {
+                _state.value = _state.value.copy(
+                    pwCheck = action.pwCheck,
+                )
+            }
+
+            RegisterAction.OnRegisterClick -> {
+                register()
+            }
+
+            is RegisterAction.OnRegisterCodeChanged -> {
+                _state.value = _state.value.copy(
+                    registerCode = action.code,
+                )
             }
         }
     }
 
-    private fun login() {
-        // 이미 처리 중인 작업이 있으면, 추가 요청을 무시함
-        if (_state.value.isActionHandling) {
-            viewModelScope.launch {
-                eventChannel.send(LoginEvent.LoginAlreadyInProgress)
-            }
-            return
-        }
+    private fun register() {
         _state.value = _state.value.copy(
             isActionHandling = true,
         )
         viewModelScope.launch {
-            val result = authRepository.login(_state.value.id, _state.value.pw)
-            when (result) {
+            when (val result = authRepository.register(_state.value.id, _state.value.pw, _state.value.nickname, _state.value.registerCode)) {
                 is AuthResult.Authorized<Unit> -> {
-                    eventChannel.send(LoginEvent.LoginSuccess)
+                    eventChannel.send(RegisterEvent.RegisterSuccess)
                 }
 
                 is AuthResult.Conflict<Unit> -> {
-                    // 로그인 과정에서 Conflict가 발생했다면 코드를 잘못 짠 것임
-                    Unit
+                    eventChannel.send(RegisterEvent.RegisterFail(result.reason))
                 }
 
                 is AuthResult.Unauthorized<Unit> -> {
-                    eventChannel.send(LoginEvent.LoginFail)
+                    eventChannel.send(RegisterEvent.RegisterFail(""))
                 }
 
                 is AuthResult.UnknownError<Unit> -> {
-                    eventChannel.send(LoginEvent.LoginFail)
+                    eventChannel.send(RegisterEvent.RegisterFail(""))
                 }
             }
             _state.value = _state.value.copy(
