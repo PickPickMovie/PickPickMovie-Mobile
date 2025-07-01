@@ -1,9 +1,9 @@
-package com.dothebestmayb.pickpickmovie.data.di
+package com.dothebestmayb.pickpickmovie.data.auth.di
 
-import com.dothebestmayb.pickpickmovie.data.auth.AuthRepository
-import com.dothebestmayb.pickpickmovie.data.auth.AuthRepositoryImpl
-import com.dothebestmayb.pickpickmovie.data.session.EncryptedSessionStorage
-import com.dothebestmayb.pickpickmovie.data.session.SessionStorage
+import com.dothebestmayb.pickpickmovie.data.auth.local.storage.EncryptedSessionStorage
+import com.dothebestmayb.pickpickmovie.data.auth.local.storage.SessionStorage
+import com.dothebestmayb.pickpickmovie.data.auth.remote.repository.AuthRepository
+import com.dothebestmayb.pickpickmovie.data.auth.remote.repository.AuthRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

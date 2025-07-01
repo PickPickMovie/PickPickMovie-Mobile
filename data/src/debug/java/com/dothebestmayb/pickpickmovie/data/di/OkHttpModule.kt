@@ -1,6 +1,7 @@
 package com.dothebestmayb.pickpickmovie.data.di
 
 import com.dothebestmayb.pickpickmovie.data.auth.AuthInterceptor
+import com.dothebestmayb.pickpickmovie.data.auth.TokenAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +17,10 @@ object OkHttpModule {
 
     @Provides
     @Singleton
-    fun provideOkhttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
+    fun provideOkhttpClient(
+        authInterceptor: AuthInterceptor,
+        tokenAuthenticator: TokenAuthenticator,
+    ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
@@ -26,6 +30,7 @@ object OkHttpModule {
             .writeTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
+            .authenticator(tokenAuthenticator)
             .build()
     }
 }

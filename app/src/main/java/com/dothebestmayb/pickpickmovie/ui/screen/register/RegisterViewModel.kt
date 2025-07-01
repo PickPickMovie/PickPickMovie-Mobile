@@ -2,8 +2,8 @@ package com.dothebestmayb.pickpickmovie.ui.screen.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dothebestmayb.pickpickmovie.data.auth.AuthRepository
-import com.dothebestmayb.pickpickmovie.data.auth.AuthResult
+import com.dothebestmayb.pickpickmovie.data.auth.remote.repository.AuthRepository
+import com.dothebestmayb.pickpickmovie.data.model.AuthResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -90,7 +90,12 @@ class RegisterViewModel @Inject constructor(
             isActionHandling = true,
         )
         viewModelScope.launch {
-            when (val result = authRepository.register(_state.value.id, _state.value.pw, _state.value.nickname, _state.value.registerCode)) {
+            when (val result = authRepository.register(
+                _state.value.id,
+                _state.value.pw,
+                _state.value.nickname,
+                _state.value.registerCode
+            )) {
                 is AuthResult.Authorized<Unit> -> {
                     eventChannel.send(RegisterEvent.RegisterSuccess)
                 }

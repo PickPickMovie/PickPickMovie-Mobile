@@ -2,8 +2,8 @@ package com.dothebestmayb.pickpickmovie.ui.screen.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dothebestmayb.pickpickmovie.data.auth.AuthRepository
-import com.dothebestmayb.pickpickmovie.data.auth.AuthResult
+import com.dothebestmayb.pickpickmovie.data.auth.remote.repository.AuthRepository
+import com.dothebestmayb.pickpickmovie.data.model.AuthResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

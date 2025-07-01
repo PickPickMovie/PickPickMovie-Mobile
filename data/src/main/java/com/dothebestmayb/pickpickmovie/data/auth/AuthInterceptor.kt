@@ -1,6 +1,6 @@
 package com.dothebestmayb.pickpickmovie.data.auth
 
-import com.dothebestmayb.pickpickmovie.data.session.SessionStorage
+import com.dothebestmayb.pickpickmovie.data.auth.local.storage.SessionStorage
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -25,23 +25,29 @@ import javax.inject.Provider
 class AuthInterceptor @Inject constructor(
     private val sessionStorageProvider: Provider<SessionStorage>,
 ) : Interceptor {
+
     override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request()
+
+        // 토큰을 갱신하기 위한 API를 호출할 경우, 헤더 추가 없이 바로 요청
+        if (request.url.encodedPath.contains("/auth/refresh")) {
+            return chain.proceed(request)
+        }
+
         val sessionStorage = sessionStorageProvider.get()
 
         // runBlocking을 사용하여 suspend 함수를 동기적으로 호출합니다.
         // 현재 스레드(OkHttp의 I/O 스레드)는 get()이 완료될 때까지 여기서 대기합니다.
-        val authInfo = runBlocking {
-            sessionStorage.get()
+        val accessToken = runBlocking {
+            sessionStorage.get()?.accessToken
         }
-        val accessToken = authInfo?.accessToken
-        val request = chain.request()
 
-        if (!accessToken.isNullOrEmpty()) {
-            val newRequest = request.newBuilder()
-                .addHeader("Authorization", "Bearer $accessToken")
-                .build()
-            return chain.proceed(newRequest)
+        if (accessToken.isNullOrEmpty()) {
+            return chain.proceed(request)
         }
-        return chain.proceed(request)
+        val newRequest = request.newBuilder()
+            .addHeader("Authorization", "Bearer $accessToken")
+            .build()
+        return chain.proceed(newRequest)
     }
 }

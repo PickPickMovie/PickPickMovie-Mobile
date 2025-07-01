@@ -1,8 +1,8 @@
-package com.dothebestmayb.pickpickmovie.data.util
+package com.dothebestmayb.pickpickmovie.data.core.common
 
-sealed interface DataError: Error {
+sealed interface DataError : Error {
 
-    enum class Network: DataError {
+    enum class Network : DataError {
         REQUEST_TIMEOUT,
         UNAUTHORIZED,
         CONFLICT,
@@ -14,7 +14,7 @@ sealed interface DataError: Error {
         UNKNOWN
     }
 
-    enum class Local: DataError {
+    enum class Local : DataError {
         DISK_FULL
     }
 }

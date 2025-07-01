@@ -1,6 +1,6 @@
-package com.dothebestmayb.pickpickmovie.data.di
+package com.dothebestmayb.pickpickmovie.data.auth.di
 
-import com.dothebestmayb.pickpickmovie.data.auth.AuthApi
+import com.dothebestmayb.pickpickmovie.data.auth.AuthService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,8 +14,8 @@ internal object ApiModule {
 
     @Provides
     @Singleton
-    fun provideAuthApi(retrofit: Retrofit): AuthApi {
-        return retrofit.create(AuthApi::class.java)
+    fun provideAuthApi(retrofit: Retrofit): AuthService {
+        return retrofit.create(AuthService::class.java)
     }
 
 }

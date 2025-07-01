@@ -1,4 +1,4 @@
-package com.dothebestmayb.pickpickmovie.data.di
+package com.dothebestmayb.pickpickmovie.data.auth.di
 
 import android.content.Context
 import android.content.SharedPreferences

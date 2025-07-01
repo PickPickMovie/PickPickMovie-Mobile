@@ -1,12 +1,18 @@
-package com.dothebestmayb.pickpickmovie.data.auth
+package com.dothebestmayb.pickpickmovie.data.auth.remote.repository
 
-import com.dothebestmayb.pickpickmovie.data.session.AuthInfo
-import com.dothebestmayb.pickpickmovie.data.session.SessionStorage
+import com.dothebestmayb.pickpickmovie.data.auth.AuthService
+import com.dothebestmayb.pickpickmovie.data.auth.local.storage.SessionStorage
+import com.dothebestmayb.pickpickmovie.data.auth.mapper.toDomain
+import com.dothebestmayb.pickpickmovie.data.auth.remote.model.LoginRequestDto
+import com.dothebestmayb.pickpickmovie.data.auth.remote.model.RegisterRequestDto
+import com.dothebestmayb.pickpickmovie.data.model.AuthResult
+import com.dothebestmayb.pickpickmovie.data.model.AuthToken
+import com.dothebestmayb.pickpickmovie.data.model.UserProfile
 import retrofit2.HttpException
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val api: AuthApi,
+    private val api: AuthService,
     private val sessionStorage: SessionStorage,
 ) : AuthRepository {
 
@@ -18,7 +24,7 @@ class AuthRepositoryImpl @Inject constructor(
     ): AuthResult<Unit> {
         return try {
             val response = api.register(
-                request = RegisterRequest(
+                request = RegisterRequestDto(
                     email = email,
                     password = password,
                     nickname = nickname,
@@ -26,10 +32,9 @@ class AuthRepositoryImpl @Inject constructor(
                 )
             )
             sessionStorage.set(
-                AuthInfo(
+                AuthToken(
                     accessToken = response.accessToken,
                     refreshToken = response.refreshToken,
-                    userId = email,
                 )
             )
             AuthResult.Authorized()
@@ -41,16 +46,15 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun login(email: String, password: String): AuthResult<Unit> {
         return try {
             val response = api.login(
-                request = LoginRequest(
+                request = LoginRequestDto(
                     email = email,
                     password = password,
                 )
             )
             sessionStorage.set(
-                AuthInfo(
+                AuthToken(
                     accessToken = response.accessToken,
                     refreshToken = response.refreshToken,
-                    userId = email,
                 )
             )
             AuthResult.Authorized()
@@ -65,20 +69,12 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun authenticate(): AuthResult<Unit> {
+    override suspend fun getUserProfile(): AuthResult<UserProfile> {
         return try {
-            val info = sessionStorage.get() ?: return AuthResult.Unauthorized()
-            api.authenticate("Bearer ${info.refreshToken}")
-
-            AuthResult.Authorized()
-        } catch (e: HttpException) {
-            if (e.code() == 401) { // unauthorized
-                AuthResult.Unauthorized()
-            } else {
-                AuthResult.UnknownError()
-            }
+            val userProfile = api.getUserProfile().toDomain()
+            AuthResult.Authorized(userProfile)
         } catch (e: Exception) {
-            AuthResult.UnknownError()
+            AuthResult.Unauthorized()
         }
     }
 }
