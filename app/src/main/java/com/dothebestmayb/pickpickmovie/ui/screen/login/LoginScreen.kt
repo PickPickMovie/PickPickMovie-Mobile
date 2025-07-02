@@ -31,7 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dothebestmayb.pickpickmovie.R
+import com.dothebestmayb.pickpickmovie.designsystem.InputTextField
 import com.dothebestmayb.pickpickmovie.ui.common.ObserveAsEvents
+import com.dothebestmayb.pickpickmovie.ui.screen.register.RegisterAction
 import com.dothebestmayb.pickpickmovie.ui.theme.ActionButtonColor
 import com.dothebestmayb.pickpickmovie.ui.theme.ActionButtonContentColor
 import com.dothebestmayb.pickpickmovie.ui.theme.PickPickMovieTheme
@@ -108,17 +110,12 @@ private fun LoginScreen(
                 modifier = Modifier.padding(24.dp)
             )
 
-            TextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp),
-                value = state.id,
-                onValueChange = {
+            InputTextField(
+                text = state.id,
+                placeHolder = stringResource(R.string.id_placeHolder),
+                label = stringResource(R.string.id_label),
+                onTextChanged = {
                     onAction(LoginAction.OnIdChanged(it))
-                },
-                textStyle = MaterialTheme.typography.bodyLarge,
-                label = {
-                    Text(stringResource(R.string.id_label))
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
@@ -126,31 +123,26 @@ private fun LoginScreen(
                 ),
             )
 
-            TextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp)
-                    .padding(top = 36.dp),
-                value = state.pw,
-                onValueChange = {
+            InputTextField(
+                text = state.pw,
+                placeHolder = stringResource(R.string.pw_placeHolder),
+                label = stringResource(R.string.pw_label),
+                onTextChanged = {
                     onAction(LoginAction.OnPwChanged(it))
-                },
-                textStyle = MaterialTheme.typography.bodyLarge,
-                label = {
-                    Text(stringResource(R.string.pw_label))
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Next
                 ),
-                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier.padding(top = 18.dp),
+                isPassword = true,
             )
 
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 36.dp)
-                    .padding(top = 36.dp),
+                    .padding(top = 24.dp),
                 onClick = {
                     onAction(LoginAction.OnLoginClick)
                 },
@@ -170,7 +162,7 @@ private fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 36.dp)
-                    .padding(top = 36.dp),
+                    .padding(top = 24.dp),
                 onClick = {
                     onAction(LoginAction.OnRegisterClick)
                 },
