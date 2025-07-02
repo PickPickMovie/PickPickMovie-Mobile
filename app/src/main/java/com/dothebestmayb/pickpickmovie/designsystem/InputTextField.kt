@@ -23,8 +23,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.graphics.CanvasHolder
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,32 +38,38 @@ import com.dothebestmayb.pickpickmovie.ui.theme.PickPickMovieTheme
 @Composable
 fun InputTextField(
     text: String,
-    placeHolderText: String,
+    label: String,
     onTextChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
-    isPasswordField: Boolean = false,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    placeHolder: String? = null,
+    isPassword: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
 ) {
 
     var passwordVisible by remember { mutableStateOf(false) }
 
     TextField(
+        modifier = modifier
+            .fillMaxWidth() // 가로 너비를 꽉 채움
+            .padding(horizontal = 32.dp), // 좌우 패딩 추가
         value = text, // 현재 텍스트 상태
+        label = {
+            Text(label)
+        },
         onValueChange = {
             onTextChanged(it)
         },
         textStyle = MaterialTheme.typography.bodyLarge,
-        modifier = modifier
-            .fillMaxWidth() // 가로 너비를 꽉 채움
-            .padding(horizontal = 32.dp), // 좌우 패딩 추가
         placeholder = {
-            Text(
-                text = placeHolderText,
-                color = Color(0xFFADB5BD) // 플레이스홀더 텍스트 색상
-            )
+            if (placeHolder != null) {
+                Text(
+                    text = placeHolder,
+                    color = Color(0xFFADB5BD) // 플레이스홀더 텍스트 색상
+                )
+            }
         },
         trailingIcon = {
-            if (isPasswordField) {
+            if (isPassword) {
                 val image = if (passwordVisible) {
                     Icons.Filled.Visibility
                 } else {
@@ -74,6 +83,9 @@ fun InputTextField(
                 IconButton(
                     onClick = {
                         passwordVisible = !passwordVisible
+                    },
+                    modifier = Modifier.focusProperties {
+                        canFocus = false
                     }
                 ) {
                     Icon(
@@ -101,12 +113,9 @@ fun InputTextField(
             focusedTextColor = Color.Black,
             unfocusedTextColor = Color.Black,
         ),
-
-        // 5. 한 줄 입력 필드로 제한
         singleLine = true,
-
         keyboardOptions = keyboardOptions,
-        visualTransformation = if (isPasswordField && !passwordVisible) {
+        visualTransformation = if (isPassword && !passwordVisible) {
             PasswordVisualTransformation()
         } else {
             VisualTransformation.None
@@ -130,7 +139,8 @@ fun InputTextFieldPreview() {
             ) {
                 InputTextField(
                     text = "",
-                    placeHolderText = "아이디",
+                    label = "아이디",
+                    placeHolder = "3 ~ 6자",
                     onTextChanged = {},
                 )
             }

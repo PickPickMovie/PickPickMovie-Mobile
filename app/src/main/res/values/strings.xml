@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">PickPickMovie</string>
     <string name="id_label">아이디</string>
+    <string name="id_placeHolder">이메일 입력</string>
     <string name="pw_label">비밀번호</string>
+    <string name="pw_placeHolder">8 ~ 16자리, 영문자와 숫자 포함</string>
     <string name="login">로그인</string>
     <string name="register">회원가입</string>
     <string name="login_fail">로그인에 실패했습니다. 아이디, 비밀번호를 확인해주세요.</string>
@@ -14,4 +16,5 @@
     <string name="hide_password">비밀번호 숨기기</string>
     <string name="show_password">비밀번호 표시하기</string>
     <string name="login_already_in_progress">이전 로그인 요청 작업을 처리 중입니다.</string>
+    <string name="nickname_placeholder">2 ~ 8자리</string>
 </resources>

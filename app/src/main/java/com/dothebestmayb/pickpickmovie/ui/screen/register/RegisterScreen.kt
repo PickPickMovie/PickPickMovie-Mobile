@@ -17,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -52,6 +53,7 @@ fun RegisterScreenRoot(
                     Toast.LENGTH_LONG
                 ).show()
             }
+
             RegisterEvent.RegisterSuccess -> {
                 Toast.makeText(
                     context,
@@ -87,7 +89,10 @@ fun RegisterScreen(
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 32.dp),
+                        .padding(horizontal = 32.dp)
+                        .focusProperties {
+                            canFocus = true
+                        },
                     onClick = {
                         onAction(RegisterAction.OnRegisterClick)
                     },
@@ -120,7 +125,8 @@ fun RegisterScreen(
 
             InputTextField(
                 text = state.id,
-                placeHolderText = stringResource(R.string.id_label),
+                placeHolder = stringResource(R.string.id_placeHolder),
+                label = stringResource(R.string.id_label),
                 onTextChanged = {
                     onAction(RegisterAction.OnIdChanged(it))
                 },
@@ -132,7 +138,8 @@ fun RegisterScreen(
 
             InputTextField(
                 text = state.pw,
-                placeHolderText = stringResource(R.string.pw_label),
+                placeHolder = stringResource(R.string.pw_placeHolder),
+                label = stringResource(R.string.pw_label),
                 onTextChanged = {
                     onAction(RegisterAction.OnPwChanged(it))
                 },
@@ -141,12 +148,12 @@ fun RegisterScreen(
                     imeAction = ImeAction.Next
                 ),
                 modifier = Modifier.padding(top = 18.dp),
-                isPasswordField = true,
+                isPassword = true,
             )
 
             InputTextField(
                 text = state.pwCheck,
-                placeHolderText = stringResource(R.string.pw_check_label),
+                label = stringResource(R.string.pw_check_label),
                 onTextChanged = {
                     onAction(RegisterAction.OnPwCheckChanged(it))
                 },
@@ -155,12 +162,13 @@ fun RegisterScreen(
                     imeAction = ImeAction.Next
                 ),
                 modifier = Modifier.padding(top = 18.dp),
-                isPasswordField = true,
+                isPassword = true,
             )
 
             InputTextField(
                 text = state.nickname,
-                placeHolderText = stringResource(R.string.nickname_label),
+                label = stringResource(R.string.nickname_label),
+                placeHolder = stringResource(R.string.nickname_placeholder),
                 onTextChanged = {
                     onAction(RegisterAction.OnNicknameChanged(it))
                 },
@@ -173,7 +181,7 @@ fun RegisterScreen(
 
             InputTextField(
                 text = state.registerCode,
-                placeHolderText = stringResource(R.string.register_code_label),
+                label = stringResource(R.string.register_code_label),
                 onTextChanged = {
                     onAction(RegisterAction.OnRegisterCodeChanged(it))
                 },
