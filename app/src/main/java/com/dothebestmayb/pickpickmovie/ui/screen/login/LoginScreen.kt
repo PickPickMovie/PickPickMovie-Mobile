@@ -112,7 +112,6 @@ private fun LoginScreen(
 
             InputTextField(
                 text = state.id,
-                placeHolder = stringResource(R.string.id_placeHolder),
                 label = stringResource(R.string.id_label),
                 onTextChanged = {
                     onAction(LoginAction.OnIdChanged(it))
@@ -125,7 +124,6 @@ private fun LoginScreen(
 
             InputTextField(
                 text = state.pw,
-                placeHolder = stringResource(R.string.pw_placeHolder),
                 label = stringResource(R.string.pw_label),
                 onTextChanged = {
                     onAction(LoginAction.OnPwChanged(it))
