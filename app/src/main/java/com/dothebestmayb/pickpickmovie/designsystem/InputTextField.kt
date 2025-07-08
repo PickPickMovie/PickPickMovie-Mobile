@@ -24,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusProperties
-import androidx.compose.ui.graphics.CanvasHolder
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -130,6 +129,8 @@ fun InputTextField(
 @Composable
 fun InputTextFieldPreview() {
     PickPickMovieTheme {
+        var id by remember { mutableStateOf("") }
+
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = Color.White
@@ -141,10 +142,12 @@ fun InputTextFieldPreview() {
                 verticalArrangement = Arrangement.Top
             ) {
                 InputTextField(
-                    text = "",
+                    text = id,
                     label = "아이디",
                     placeHolder = "3 ~ 6자",
-                    onTextChanged = {},
+                    onTextChanged = {
+                        id = it
+                    },
                     maxLength = 6
                 )
             }
