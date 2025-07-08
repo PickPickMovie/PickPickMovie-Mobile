@@ -44,6 +44,7 @@ fun InputTextField(
     placeHolder: String? = null,
     isPassword: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+    maxLength: Int = Int.MAX_VALUE,
 ) {
 
     var passwordVisible by remember { mutableStateOf(false) }
@@ -57,7 +58,9 @@ fun InputTextField(
             Text(label)
         },
         onValueChange = {
-            onTextChanged(it)
+            if (it.length <= maxLength) {
+                onTextChanged(it)
+            }
         },
         textStyle = MaterialTheme.typography.bodyLarge,
         placeholder = {
@@ -142,6 +145,7 @@ fun InputTextFieldPreview() {
                     label = "아이디",
                     placeHolder = "3 ~ 6자",
                     onTextChanged = {},
+                    maxLength = 6
                 )
             }
         }
