@@ -40,23 +40,26 @@ fun InputTextField(
     modifier: Modifier = Modifier,
     isPasswordField: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    maxLength: Int = Int.MAX_VALUE,
 ) {
 
     var passwordVisible by remember { mutableStateOf(false) }
 
     TextField(
-        value = text, // 현재 텍스트 상태
+        value = text,
         onValueChange = {
-            onTextChanged(it)
+            if (it.length <= maxLength) {
+                onTextChanged(it)
+            }
         },
         textStyle = MaterialTheme.typography.bodyLarge,
         modifier = modifier
-            .fillMaxWidth() // 가로 너비를 꽉 채움
-            .padding(horizontal = 32.dp), // 좌우 패딩 추가
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp),
         placeholder = {
             Text(
                 text = placeHolderText,
-                color = Color(0xFFADB5BD) // 플레이스홀더 텍스트 색상
+                color = Color(0xFFADB5BD)
             )
         },
         trailingIcon = {
@@ -85,26 +88,19 @@ fun InputTextField(
         },
         shape = RoundedCornerShape(12.dp),
         colors = TextFieldDefaults.colors(
-            // 입력 필드의 배경색
             focusedContainerColor = Color(0xFFF7F8F9),
             unfocusedContainerColor = Color(0xFFF7F8F9),
             disabledContainerColor = Color(0xFFF7F8F9),
 
-            // 입력 필드의 밑줄(Indicator)을 투명하게 만들어 보이지 않게 처리
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
 
-            // 커서 색상
             cursorColor = Color.Black,
-            // 텍스트 색상
             focusedTextColor = Color.Black,
             unfocusedTextColor = Color.Black,
         ),
-
-        // 5. 한 줄 입력 필드로 제한
         singleLine = true,
-
         keyboardOptions = keyboardOptions,
         visualTransformation = if (isPasswordField && !passwordVisible) {
             PasswordVisualTransformation()
@@ -126,12 +122,20 @@ fun InputTextFieldPreview() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(top = 20.dp),
-                verticalArrangement = Arrangement.Top
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 InputTextField(
-                    text = "",
+                    text = "text",
                     placeHolderText = "아이디",
                     onTextChanged = {},
+                )
+
+                InputTextField(
+                    text = "12345",
+                    placeHolderText = "비밀번호 (최대 10자)",
+                    onTextChanged = {},
+                    isPasswordField = true,
+                    maxLength = 10
                 )
             }
         }
