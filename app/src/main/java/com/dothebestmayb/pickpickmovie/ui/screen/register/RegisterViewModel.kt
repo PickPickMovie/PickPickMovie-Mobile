@@ -2,13 +2,16 @@ package com.dothebestmayb.pickpickmovie.ui.screen.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dothebestmayb.pickpickmovie.core.validation.InputFieldType
+import com.dothebestmayb.pickpickmovie.core.validation.ValidationRule
+import com.dothebestmayb.pickpickmovie.core.validation.Validator
 import com.dothebestmayb.pickpickmovie.data.auth.remote.repository.AuthRepository
 import com.dothebestmayb.pickpickmovie.data.model.AuthResult
+import com.dothebestmayb.pickpickmovie.ui.screen.common.FieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,85 +19,106 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val validator: Validator,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(RegisterState())
+    private val _state = MutableStateFlow(createInitialState())
     val state = _state.asStateFlow()
 
     private val eventChannel = Channel<RegisterEvent> { }
     val events = eventChannel.receiveAsFlow()
 
-    init {
-        observeStateChanges()
-    }
-
-    private fun observeStateChanges() {
-        viewModelScope.launch {
-            _state.collectLatest { currentState ->
-                val isAllFieldsFilled = currentState.id.isNotBlank() &&
-                        currentState.pw.isNotBlank() &&
-                        currentState.pwCheck.isNotBlank() &&
-                        currentState.nickname.isNotBlank() &&
-                        currentState.registerCode.isNotBlank()
-
-                if (currentState.isRegisterClickable != isAllFieldsFilled) {
-                    _state.value = currentState.copy(
-                        isRegisterClickable = isAllFieldsFilled
-                    )
-                }
-            }
-        }
+    private fun createInitialState(): RegisterState {
+        return RegisterState(
+            fields = mapOf(
+                InputFieldType.Email to FieldState(rule = validator.getRule(InputFieldType.Email)),
+                InputFieldType.Password to FieldState(rule = validator.getRule(InputFieldType.Password)),
+                InputFieldType.PasswordCheck to FieldState(rule = validator.getRule(InputFieldType.PasswordCheck)),
+                InputFieldType.Nickname to FieldState(rule = validator.getRule(InputFieldType.Nickname)),
+                InputFieldType.RegisterCode to FieldState(rule = validator.getRule(InputFieldType.RegisterCode)),
+            )
+        )
     }
 
     fun onAction(action: RegisterAction) {
-
         when (action) {
             is RegisterAction.OnIdChanged -> {
-                _state.value = _state.value.copy(
-                    id = action.id,
-                )
+                onFieldChanged(InputFieldType.Email, action.id)
             }
 
             is RegisterAction.OnNicknameChanged -> {
-                _state.value = _state.value.copy(
-                    nickname = action.nickname,
-                )
+                onFieldChanged(InputFieldType.Nickname, action.nickname)
             }
 
             is RegisterAction.OnPwChanged -> {
-                _state.value = _state.value.copy(
-                    pw = action.pw,
-                )
+                onFieldChanged(InputFieldType.Password, action.pw)
             }
 
             is RegisterAction.OnPwCheckChanged -> {
-                _state.value = _state.value.copy(
-                    pwCheck = action.pwCheck,
-                )
+                onFieldChanged(InputFieldType.PasswordCheck, action.pwCheck)
             }
 
             RegisterAction.OnRegisterClick -> {
+                if (_state.value.isActionHandling) {
+                    return
+                }
                 register()
             }
 
             is RegisterAction.OnRegisterCodeChanged -> {
-                _state.value = _state.value.copy(
-                    registerCode = action.code,
-                )
+                onFieldChanged(InputFieldType.RegisterCode, action.registerCode)
             }
         }
+    }
+
+    private fun onFieldChanged(type: InputFieldType, newValue: String) {
+        val currentField = _state.value.fields[type] ?: return
+        val isError = when (val rule = currentField.rule) {
+            is ValidationRule.InputField -> {
+                if (type == InputFieldType.PasswordCheck) {
+                    val passwordField = _state.value.fields[InputFieldType.Password] ?: return
+                    passwordField.value != newValue
+                } else {
+                    newValue.isNotBlank() && !rule.validator(newValue)
+                }
+            }
+
+            ValidationRule.None -> newValue.isNotBlank()
+        }
+
+        val currentFields = _state.value.fields
+        val updatedFieldState = (currentFields[type] ?: return).copy(
+            value = newValue,
+            isError = isError
+        )
+
+        val newFields = currentFields.toMutableMap().apply {
+            this[type] = updatedFieldState
+        }
+
+        val isRegisterClickable = newFields.values.all { it.value.isNotBlank() && !it.isError }
+
+        _state.value = _state.value.copy(
+            fields = newFields,
+            isRegisterClickable = isRegisterClickable,
+        )
     }
 
     private fun register() {
         _state.value = _state.value.copy(
             isActionHandling = true,
         )
+        val email = _state.value.fields[InputFieldType.Email]?.value ?: ""
+        val pw = _state.value.fields[InputFieldType.Password]?.value ?: ""
+        val nickname = _state.value.fields[InputFieldType.Nickname]?.value ?: ""
+        val registerCode = _state.value.fields[InputFieldType.RegisterCode]?.value ?: ""
+
         viewModelScope.launch {
             when (val result = authRepository.register(
-                _state.value.id,
-                _state.value.pw,
-                _state.value.nickname,
-                _state.value.registerCode
+                email = email,
+                password = pw,
+                nickname = nickname,
+                registerCode = registerCode,
             )) {
                 is AuthResult.Authorized<Unit> -> {
                     eventChannel.send(RegisterEvent.RegisterSuccess)

@@ -29,8 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dothebestmayb.pickpickmovie.R
+import com.dothebestmayb.pickpickmovie.core.validation.InputFieldType
 import com.dothebestmayb.pickpickmovie.designsystem.InputTextField
 import com.dothebestmayb.pickpickmovie.ui.common.ObserveAsEvents
+import com.dothebestmayb.pickpickmovie.ui.screen.common.FieldState
 import com.dothebestmayb.pickpickmovie.ui.theme.ActionButtonColor
 import com.dothebestmayb.pickpickmovie.ui.theme.ActionButtonContentColor
 import com.dothebestmayb.pickpickmovie.ui.theme.PickPickMovieTheme
@@ -78,6 +80,12 @@ fun RegisterScreen(
     onAction: (RegisterAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val emailFieldState = state.fields[InputFieldType.Email] ?: FieldState()
+    val passwordFieldState = state.fields[InputFieldType.Password] ?: FieldState()
+    val passwordCheckFieldState = state.fields[InputFieldType.PasswordCheck] ?: FieldState()
+    val nicknameFieldState = state.fields[InputFieldType.Nickname] ?: FieldState()
+    val registerCodeFieldState = state.fields[InputFieldType.RegisterCode] ?: FieldState()
+
     Scaffold(
         modifier = modifier,
         bottomBar = {
@@ -124,7 +132,7 @@ fun RegisterScreen(
             )
 
             InputTextField(
-                text = state.id,
+                text = emailFieldState.value,
                 placeHolder = stringResource(R.string.id_placeHolder),
                 label = stringResource(R.string.id_label),
                 onTextChanged = {
@@ -134,10 +142,12 @@ fun RegisterScreen(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
                 ),
+                validationRule = emailFieldState.rule,
+                isError = emailFieldState.isError,
             )
 
             InputTextField(
-                text = state.pw,
+                text = passwordFieldState.value,
                 placeHolder = stringResource(R.string.pw_placeHolder),
                 label = stringResource(R.string.pw_label),
                 onTextChanged = {
@@ -149,10 +159,12 @@ fun RegisterScreen(
                 ),
                 modifier = Modifier.padding(top = 18.dp),
                 isPassword = true,
+                validationRule = passwordFieldState.rule,
+                isError = passwordFieldState.isError,
             )
 
             InputTextField(
-                text = state.pwCheck,
+                text = passwordCheckFieldState.value,
                 label = stringResource(R.string.pw_check_label),
                 onTextChanged = {
                     onAction(RegisterAction.OnPwCheckChanged(it))
@@ -163,10 +175,12 @@ fun RegisterScreen(
                 ),
                 modifier = Modifier.padding(top = 18.dp),
                 isPassword = true,
+                validationRule = passwordCheckFieldState.rule,
+                isError = passwordCheckFieldState.isError,
             )
 
             InputTextField(
-                text = state.nickname,
+                text = nicknameFieldState.value,
                 label = stringResource(R.string.nickname_label),
                 placeHolder = stringResource(R.string.nickname_placeholder),
                 onTextChanged = {
@@ -176,11 +190,13 @@ fun RegisterScreen(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
                 ),
-                modifier = Modifier.padding(top = 18.dp)
+                modifier = Modifier.padding(top = 18.dp),
+                validationRule = nicknameFieldState.rule,
+                isError = nicknameFieldState.isError,
             )
 
             InputTextField(
-                text = state.registerCode,
+                text = registerCodeFieldState.value,
                 label = stringResource(R.string.register_code_label),
                 onTextChanged = {
                     onAction(RegisterAction.OnRegisterCodeChanged(it))
@@ -189,7 +205,9 @@ fun RegisterScreen(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
                 ),
-                modifier = Modifier.padding(top = 18.dp)
+                modifier = Modifier.padding(top = 18.dp),
+                validationRule = registerCodeFieldState.rule,
+                isError = registerCodeFieldState.isError,
             )
         }
     }
@@ -200,7 +218,9 @@ fun RegisterScreen(
 private fun RegisterScreenPreview() {
     PickPickMovieTheme {
         RegisterScreen(
-            state = RegisterState(),
+            state = RegisterState(
+                fields = mapOf(),
+            ),
             onAction = {},
         )
     }

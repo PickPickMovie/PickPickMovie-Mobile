@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -32,18 +33,22 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dothebestmayb.pickpickmovie.R
+import com.dothebestmayb.pickpickmovie.core.validation.InputFieldType
+import com.dothebestmayb.pickpickmovie.core.validation.InputPolicy
+import com.dothebestmayb.pickpickmovie.core.validation.ValidationRule
 import com.dothebestmayb.pickpickmovie.ui.theme.PickPickMovieTheme
 
 @Composable
 fun InputTextField(
     text: String,
-    label: String,
     onTextChanged: (String) -> Unit,
+    label: String,
+    validationRule: ValidationRule,
+    isError: Boolean,
     modifier: Modifier = Modifier,
     placeHolder: String? = null,
     isPassword: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-    maxLength: Int = Int.MAX_VALUE,
 ) {
 
     var passwordVisible by remember { mutableStateOf(false) }
@@ -57,8 +62,13 @@ fun InputTextField(
             Text(label)
         },
         onValueChange = {
-            if (it.length <= maxLength) {
-                onTextChanged(it)
+            when (validationRule) {
+                ValidationRule.None -> Unit
+                is ValidationRule.InputField -> {
+                    if (it.length <= validationRule.maxLength) {
+                        onTextChanged(it)
+                    }
+                }
             }
         },
         textStyle = MaterialTheme.typography.bodyLarge,
@@ -66,7 +76,7 @@ fun InputTextField(
             if (placeHolder != null) {
                 Text(
                     text = placeHolder,
-                    color = Color(0xFFADB5BD) // 플레이스홀더 텍스트 색상
+                    color = colorResource(R.color.place_holder_color)
                 )
             }
         },
@@ -100,9 +110,9 @@ fun InputTextField(
         shape = RoundedCornerShape(12.dp),
         colors = TextFieldDefaults.colors(
             // 입력 필드의 배경색
-            focusedContainerColor = Color(0xFFF7F8F9),
-            unfocusedContainerColor = Color(0xFFF7F8F9),
-            disabledContainerColor = Color(0xFFF7F8F9),
+            focusedContainerColor = colorResource(R.color.input_text_field_background_color),
+            unfocusedContainerColor = colorResource(R.color.input_text_field_background_color),
+            disabledContainerColor = colorResource(R.color.input_text_field_background_color),
 
             // 입력 필드의 밑줄(Indicator)을 투명하게 만들어 보이지 않게 처리
             focusedIndicatorColor = Color.Transparent,
@@ -114,13 +124,32 @@ fun InputTextField(
             // 텍스트 색상
             focusedTextColor = Color.Black,
             unfocusedTextColor = Color.Black,
+
+            errorIndicatorColor = Color.Red
         ),
         singleLine = true,
-        keyboardOptions = keyboardOptions,
+        keyboardOptions = if (validationRule is ValidationRule.InputField) {
+            keyboardOptions.copy(keyboardType = validationRule.keyboardType)
+        } else {
+            keyboardOptions
+        },
         visualTransformation = if (isPassword && !passwordVisible) {
             PasswordVisualTransformation()
         } else {
             VisualTransformation.None
+        },
+        isError = isError,
+        supportingText = {
+            if (isError && validationRule is ValidationRule.InputField) {
+                Text(
+                    text = stringResource(validationRule.errorMessageResId),
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 36.dp, vertical = 4.dp)
+                )
+            }
         }
     )
 }
@@ -143,12 +172,13 @@ fun InputTextFieldPreview() {
             ) {
                 InputTextField(
                     text = id,
-                    label = "아이디",
+                    label = "이메일",
                     placeHolder = "3 ~ 6자",
                     onTextChanged = {
                         id = it
                     },
-                    maxLength = 6
+                    isError = true,
+                    validationRule = InputPolicy.getRule(InputFieldType.Email)
                 )
             }
         }

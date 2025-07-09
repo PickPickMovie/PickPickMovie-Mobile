@@ -13,10 +13,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,15 +23,15 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dothebestmayb.pickpickmovie.R
+import com.dothebestmayb.pickpickmovie.core.validation.InputFieldType
 import com.dothebestmayb.pickpickmovie.designsystem.InputTextField
 import com.dothebestmayb.pickpickmovie.ui.common.ObserveAsEvents
-import com.dothebestmayb.pickpickmovie.ui.screen.register.RegisterAction
+import com.dothebestmayb.pickpickmovie.ui.screen.common.FieldState
 import com.dothebestmayb.pickpickmovie.ui.theme.ActionButtonColor
 import com.dothebestmayb.pickpickmovie.ui.theme.ActionButtonContentColor
 import com.dothebestmayb.pickpickmovie.ui.theme.PickPickMovieTheme
@@ -94,6 +92,9 @@ private fun LoginScreen(
     onAction: (LoginAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val emailFieldState = state.fields[InputFieldType.Email] ?: FieldState()
+    val passwordFieldState = state.fields[InputFieldType.Password] ?: FieldState()
+
     Scaffold(
         modifier = modifier
     ) { paddingValues ->
@@ -111,7 +112,7 @@ private fun LoginScreen(
             )
 
             InputTextField(
-                text = state.id,
+                text = emailFieldState.value,
                 label = stringResource(R.string.id_label),
                 onTextChanged = {
                     onAction(LoginAction.OnIdChanged(it))
@@ -120,10 +121,12 @@ private fun LoginScreen(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
                 ),
+                validationRule = emailFieldState.rule,
+                isError = emailFieldState.isError,
             )
 
             InputTextField(
-                text = state.pw,
+                text = passwordFieldState.value,
                 label = stringResource(R.string.pw_label),
                 onTextChanged = {
                     onAction(LoginAction.OnPwChanged(it))
@@ -134,6 +137,8 @@ private fun LoginScreen(
                 ),
                 modifier = Modifier.padding(top = 18.dp),
                 isPassword = true,
+                validationRule = passwordFieldState.rule,
+                isError = passwordFieldState.isError,
             )
 
             Button(
@@ -186,8 +191,16 @@ private fun LoginScreenPreview() {
     PickPickMovieTheme {
         LoginScreen(
             state = LoginState(
-                id = "123",
-                pw = "1234",
+                fields = mapOf(
+                    InputFieldType.Email to FieldState(
+                        value = "aaa@aaa.com",
+                        isError = false,
+                    ),
+                    InputFieldType.Password to FieldState(
+                        value = "q1w2e3",
+                        isError = false,
+                    )
+                ),
                 isLoginClickable = true,
                 isActionHandling = false,
             ),

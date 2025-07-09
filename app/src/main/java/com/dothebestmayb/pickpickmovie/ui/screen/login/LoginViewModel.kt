@@ -2,13 +2,16 @@ package com.dothebestmayb.pickpickmovie.ui.screen.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dothebestmayb.pickpickmovie.core.validation.InputFieldType
+import com.dothebestmayb.pickpickmovie.core.validation.ValidationRule
+import com.dothebestmayb.pickpickmovie.core.validation.Validator
 import com.dothebestmayb.pickpickmovie.data.auth.remote.repository.AuthRepository
 import com.dothebestmayb.pickpickmovie.data.model.AuthResult
+import com.dothebestmayb.pickpickmovie.ui.screen.common.FieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,39 +19,28 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val validator: Validator,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(LoginState())
+    private val _state = MutableStateFlow(createInitialState())
     val state = _state.asStateFlow()
 
     private val eventChannel = Channel<LoginEvent> { }
     val events = eventChannel.receiveAsFlow()
 
-    init {
-        observeStateChanges()
-    }
-
-    private fun observeStateChanges() {
-        viewModelScope.launch {
-            _state.collectLatest { currentState ->
-                val isAllFieldsFilled = currentState.id.isNotBlank() &&
-                        currentState.pw.isNotBlank()
-
-                if (currentState.isLoginClickable != isAllFieldsFilled) {
-                    _state.value = currentState.copy(
-                        isLoginClickable = isAllFieldsFilled
-                    )
-                }
-            }
-        }
+    private fun createInitialState(): LoginState {
+        return LoginState(
+            fields = mapOf(
+                InputFieldType.Email to FieldState(rule = validator.getRule(InputFieldType.Email)),
+                InputFieldType.Password to FieldState(rule = validator.getRule(InputFieldType.Password))
+            )
+        )
     }
 
     fun onAction(action: LoginAction) {
         when (action) {
             is LoginAction.OnIdChanged -> {
-                _state.value = _state.value.copy(
-                    id = action.id,
-                )
+                onFieldChanged(InputFieldType.Email, action.id)
             }
 
             LoginAction.OnLoginClick -> {
@@ -56,9 +48,7 @@ class LoginViewModel @Inject constructor(
             }
 
             is LoginAction.OnPwChanged -> {
-                _state.value = _state.value.copy(
-                    pw = action.pw,
-                )
+                onFieldChanged(InputFieldType.Password, action.pw)
             }
 
             LoginAction.OnRegisterClick -> {
@@ -73,6 +63,34 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    private fun onFieldChanged(type: InputFieldType, newValue: String) {
+        val currentField = _state.value.fields[type] ?: return
+        val isError = when (val rule = currentField.rule) {
+            is ValidationRule.InputField -> {
+                newValue.isNotBlank() && !rule.validator(newValue)
+            }
+
+            ValidationRule.None -> newValue.isNotBlank()
+        }
+
+        val currentFields = _state.value.fields
+        val updatedFieldState = (currentFields[type] ?: return).copy(
+            value = newValue,
+            isError = isError
+        )
+
+        val newFields = currentFields.toMutableMap().apply {
+            this[type] = updatedFieldState
+        }
+
+        val isLoginClickable = newFields.values.all { it.value.isNotBlank() && !it.isError }
+
+        _state.value = _state.value.copy(
+            fields = newFields,
+            isLoginClickable = isLoginClickable,
+        )
+    }
+
     private fun login() {
         // 이미 처리 중인 작업이 있으면, 추가 요청을 무시함
         if (_state.value.isActionHandling) {
@@ -84,8 +102,11 @@ class LoginViewModel @Inject constructor(
         _state.value = _state.value.copy(
             isActionHandling = true,
         )
+        val id = _state.value.fields[InputFieldType.Email]?.value ?: ""
+        val pw = _state.value.fields[InputFieldType.Password]?.value ?: ""
+
         viewModelScope.launch {
-            val result = authRepository.login(_state.value.id, _state.value.pw)
+            val result = authRepository.login(id, pw)
             when (result) {
                 is AuthResult.Authorized<Unit> -> {
                     eventChannel.send(LoginEvent.LoginSuccess)
