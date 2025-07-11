@@ -33,6 +33,7 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         isLoggedIn = viewModel.state.isLoggedIn,
                     )
+
                 }
             }
         }

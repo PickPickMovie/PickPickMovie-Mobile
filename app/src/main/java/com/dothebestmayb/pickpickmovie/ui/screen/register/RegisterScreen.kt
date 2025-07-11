@@ -89,6 +89,7 @@ fun RegisterScreen(
 
     Scaffold(
         modifier = modifier,
+        containerColor = Color.White,
         bottomBar = {
             Column(
                 modifier = Modifier
@@ -123,7 +124,6 @@ fun RegisterScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .background(Color.White)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {

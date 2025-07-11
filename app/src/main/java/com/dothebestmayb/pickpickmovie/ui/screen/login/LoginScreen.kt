@@ -3,6 +3,7 @@ package com.dothebestmayb.pickpickmovie.ui.screen.login
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -97,12 +98,12 @@ private fun LoginScreen(
     val passwordFieldState = state.fields[InputFieldType.Password] ?: FieldState()
 
     Scaffold(
-        modifier = modifier
+        modifier = modifier,
+        containerColor = Color.White
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .background(Color.White)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
