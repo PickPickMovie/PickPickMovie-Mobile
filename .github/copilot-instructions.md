@@ -27,7 +27,6 @@
 > **Path patterns:**
 > * `**/ui/**/*.kt`
 
-
 ## 3. 데이터 레이어: Repository 패턴 준수
 
 > **Title:** Enforce Strict Repository Pattern for Data Access
