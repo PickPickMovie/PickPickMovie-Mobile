@@ -29,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dothebestmayb.pickpickmovie.R
 import com.dothebestmayb.pickpickmovie.core.validation.InputFieldType
+import com.dothebestmayb.pickpickmovie.designsystem.ButtonWithLoading
 import com.dothebestmayb.pickpickmovie.designsystem.InputTextField
 import com.dothebestmayb.pickpickmovie.ui.common.ObserveAsEvents
 import com.dothebestmayb.pickpickmovie.ui.screen.common.FieldState
@@ -141,7 +142,7 @@ private fun LoginScreen(
                 isError = passwordFieldState.isError,
             )
 
-            Button(
+            ButtonWithLoading(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 36.dp)
@@ -155,6 +156,7 @@ private fun LoginScreen(
                 ),
                 shape = RoundedCornerShape(corner = CornerSize(12.dp)),
                 enabled = state.isLoginClickable,
+                isLoading = state.isActionHandling,
             ) {
                 Text(
                     text = stringResource(R.string.login)
@@ -173,6 +175,7 @@ private fun LoginScreen(
                     containerColor = ActionButtonColor,
                     contentColor = ActionButtonContentColor,
                 ),
+                enabled = !state.isActionHandling,
                 shape = RoundedCornerShape(corner = CornerSize(12.dp)),
             ) {
                 Text(

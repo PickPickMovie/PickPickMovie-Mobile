@@ -30,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dothebestmayb.pickpickmovie.R
 import com.dothebestmayb.pickpickmovie.core.validation.InputFieldType
+import com.dothebestmayb.pickpickmovie.designsystem.ButtonWithLoading
 import com.dothebestmayb.pickpickmovie.designsystem.InputTextField
 import com.dothebestmayb.pickpickmovie.ui.common.ObserveAsEvents
 import com.dothebestmayb.pickpickmovie.ui.screen.common.FieldState
@@ -94,7 +95,7 @@ fun RegisterScreen(
                     .background(Color.White)
                     .padding(bottom = 32.dp)
             ) {
-                Button(
+                ButtonWithLoading(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 32.dp)
@@ -110,6 +111,7 @@ fun RegisterScreen(
                     ),
                     shape = RoundedCornerShape(corner = CornerSize(12.dp)),
                     enabled = state.isRegisterClickable,
+                    isLoading = state.isActionHandling,
                 ) {
                     Text(
                         text = stringResource(R.string.register)
