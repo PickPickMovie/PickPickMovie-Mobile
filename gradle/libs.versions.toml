@@ -13,7 +13,7 @@ appcompat = "1.7.1"
 material = "1.12.0"
 jetbrainsKotlinJvm = "2.0.10"
 coreSplashscreen = "1.0.1"
-security-crptyo = "1.1.0-beta01"
+security-crypto = "1.1.0-beta01"
 
 retrofit = "3.0.0"
 ksp = "2.1.20-2.0.0"
@@ -46,7 +46,7 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-androidx-security-crptyo-ktx = { group = "androidx.security", name = "security-crypto-ktx", version.ref = "security-crptyo" }
+androidx-security-crptyo-ktx = { group = "androidx.security", name = "security-crypto-ktx", version.ref = "security-crypto" }
 
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-converter-kotlinx-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
