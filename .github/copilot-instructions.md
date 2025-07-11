@@ -1,6 +1,7 @@
 # Github Copilot Android 가이드라인
 
-코드 리뷰를 진행할 때 한국어로 답변하며, 다음 사항들을 중점적으로 검토합니다.
+- 코드 리뷰를 진행할 때 한국어로 답변합니다.
+- 다음 사항들을 중점적으로 검토하되, 다른 사항(오타 등)들도 충분한 시간을 가지고 검토합니다.
 
 ## 1. 아키텍처: 단방향 데이터 흐름(UDF) 강제
 
@@ -26,21 +27,8 @@
 > **Path patterns:**
 > * `**/ui/**/*.kt`
 
-## 3. 코루틴: 테스트 용이성을 위한 Dispatcher 주입
 
-> **Title:** Mandate Dependency Injection for Coroutine Dispatchers
->
-> **Description:**
-> You are a software engineer focused on writing clean, highly testable code. Your task is to prohibit the direct, hardcoded use of Coroutine Dispatchers (e.g., `Dispatchers.IO`, `Dispatchers.Main`).
->
-> **Context:** For testability, all Dispatchers must be injected into ViewModels, Repositories, and UseCases via their constructors. This allows us to replace them with a `TestDispatcher` in unit tests. Flag any direct calls to the global `Dispatchers` object.
->
-> **Path patterns:**
-> * `**/*ViewModel.kt`
-> * `**/*Repository.kt`
-> * `**/*UseCase.kt`
-
-## 4. 데이터 레이어: Repository 패턴 준수
+## 3. 데이터 레이어: Repository 패턴 준수
 
 > **Title:** Enforce Strict Repository Pattern for Data Access
 >
@@ -53,7 +41,7 @@
 > * `**/data/**/*.kt`
 > * `**/*ViewModel.kt`
 
-## 5. 리소스: 하드코딩된 UI 문자열 금지
+## 4. 리소스: 하드코딩된 UI 문자열 금지
 
 > **Title:** Prohibit Hardcoded Strings in the UI Layer
 >
@@ -65,7 +53,7 @@
 > **Path patterns:**
 > * `**/ui/**/*.kt`
 
-## 6. UI: Material 3 사용 의무화
+## 5. UI: Material 3 사용 의무화
 
 > **Title:** Use Material 3 Components Exclusively
 >
