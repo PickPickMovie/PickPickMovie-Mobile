@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "PickPickMovie-Mobile"
 include(":app")
+include(":data")
