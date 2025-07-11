@@ -22,7 +22,7 @@ interface AuthService {
         @Body request: LoginRequestDto
     ): LoginResponseDto
 
-    @GET("/auth/refresh")
+    @POST("/auth/refresh")
     suspend fun refresh(
         @Body request: RefreshRequestDto
     ): LoginResponseDto
