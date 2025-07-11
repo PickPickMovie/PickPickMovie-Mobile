@@ -42,7 +42,7 @@ class TokenAuthenticator @Inject constructor(
                     sessionStorage.set(newAuthToken)
 
                     response.request.newBuilder()
-                        .header("Authorization", "Bearer ${authToken.accessToken}")
+                        .header("Authorization", "Bearer ${newAuthToken.accessToken}")
                         .build()
                 } catch (e: Exception) {
                     sessionStorage.set(null)
