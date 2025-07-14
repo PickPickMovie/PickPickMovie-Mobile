@@ -1,9 +1,7 @@
 package com.dothebestmayb.pickpickmovie.ui.screen.login
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,7 +24,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dothebestmayb.pickpickmovie.R
 import com.dothebestmayb.pickpickmovie.core.validation.InputFieldType
@@ -37,13 +34,14 @@ import com.dothebestmayb.pickpickmovie.ui.screen.common.FieldState
 import com.dothebestmayb.pickpickmovie.ui.theme.ActionButtonColor
 import com.dothebestmayb.pickpickmovie.ui.theme.ActionButtonContentColor
 import com.dothebestmayb.pickpickmovie.ui.theme.PickPickMovieTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginScreenRoot(
     modifier: Modifier = Modifier,
     onLoginSuccess: () -> Unit,
     onRegisterClick: () -> Unit,
-    viewModel: LoginViewModel = hiltViewModel(),
+    viewModel: LoginViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
     val state = viewModel.state.collectAsStateWithLifecycle()

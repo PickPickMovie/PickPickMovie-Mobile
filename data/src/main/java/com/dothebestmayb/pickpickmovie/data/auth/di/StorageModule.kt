@@ -1,37 +1,27 @@
 package com.dothebestmayb.pickpickmovie.data.auth.di
 
-import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import org.koin.android.ext.koin.androidContext
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-object StorageModule {
+private const val PREFERENCES_FILE_NAME = "secure_session_prefs"
 
-    private const val PREFERENCES_FILE_NAME = "secure_session_prefs"
+/**
+ * Deprecated된 EncryptedSharedPreferences에 대한 대안은 아직 없는 듯 하다.
+ *
+ * https://proandroiddev.com/securing-the-future-navigating-the-deprecation-of-encrypted-shared-preferences-91ce3c20ae8d
+ */
+val storageModule = module {
+    single<SharedPreferences> {
+        val context = androidContext()
 
-    /**
-     * Deprecated된 EncryptedSharedPreferences에 대한 대안은 아직 없는 듯 하다.
-     *
-     * https://proandroiddev.com/securing-the-future-navigating-the-deprecation-of-encrypted-shared-preferences-91ce3c20ae8d
-     */
-    @Provides
-    @Singleton
-    fun provideEncryptedSharedPreferences(
-        @ApplicationContext context: Context
-    ): SharedPreferences {
         val masterKey = MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
             .build()
 
-        return EncryptedSharedPreferences.create(
+        EncryptedSharedPreferences.create(
             context,
             PREFERENCES_FILE_NAME,
             masterKey,

@@ -8,16 +8,13 @@ import com.dothebestmayb.pickpickmovie.core.validation.Validator
 import com.dothebestmayb.pickpickmovie.data.auth.remote.repository.AuthRepository
 import com.dothebestmayb.pickpickmovie.data.model.AuthResult
 import com.dothebestmayb.pickpickmovie.ui.screen.common.FieldState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class RegisterViewModel @Inject constructor(
+class RegisterViewModel(
     private val authRepository: AuthRepository,
     private val validator: Validator,
 ) : ViewModel() {

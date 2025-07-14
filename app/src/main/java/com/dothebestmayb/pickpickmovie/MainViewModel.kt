@@ -8,12 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.dothebestmayb.pickpickmovie.data.auth.local.storage.SessionStorage
 import com.dothebestmayb.pickpickmovie.data.auth.remote.repository.AuthRepository
 import com.dothebestmayb.pickpickmovie.data.model.AuthResult
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class MainViewModel @Inject constructor(
+class MainViewModel(
     private val sessionStorage: SessionStorage,
     private val authRepository: AuthRepository,
 ) : ViewModel() {

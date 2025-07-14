@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.serialization)
 }
 
@@ -40,6 +39,17 @@ android {
     buildFeatures {
         compose = true
     }
+    applicationVariants.all {
+        val variantName = name
+        sourceSets {
+            getByName("main") {
+                java.srcDir(File("build/generated/ksp/$variantName/kotlin"))
+            }
+        }
+    }
+    ksp {
+        arg("KOIN_CONFIG_CHECK", "true")
+    }
 }
 
 dependencies {
@@ -59,9 +69,8 @@ dependencies {
 
     implementation(libs.androidx.core.splashscreen)
 
-    implementation(libs.hilt)
-    implementation(libs.hilt.navigation.compose)
-    ksp(libs.hilt.android.compiler)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

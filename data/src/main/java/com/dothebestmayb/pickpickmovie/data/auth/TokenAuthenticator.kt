@@ -8,12 +8,10 @@ import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import javax.inject.Inject
-import javax.inject.Provider
 
-class TokenAuthenticator @Inject constructor(
+class TokenAuthenticator(
     private val sessionStorage: SessionStorage,
-    private val authServiceProvider: Provider<AuthService>,
+    private val authServiceLazy: Lazy<AuthService>,
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
@@ -33,7 +31,7 @@ class TokenAuthenticator @Inject constructor(
 
                 try {
                     val refreshResponse =
-                        authServiceProvider.get().refresh(RefreshRequestDto(refreshToken))
+                        authServiceLazy.value.refresh(RefreshRequestDto(refreshToken))
 
                     val newAuthToken = AuthToken(
                         accessToken = refreshResponse.accessToken,

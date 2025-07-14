@@ -9,9 +9,8 @@ import com.dothebestmayb.pickpickmovie.data.model.AuthResult
 import com.dothebestmayb.pickpickmovie.data.model.AuthToken
 import com.dothebestmayb.pickpickmovie.data.model.UserProfile
 import retrofit2.HttpException
-import javax.inject.Inject
 
-class AuthRepositoryImpl @Inject constructor(
+class AuthRepositoryImpl(
     private val api: AuthService,
     private val sessionStorage: SessionStorage,
 ) : AuthRepository {

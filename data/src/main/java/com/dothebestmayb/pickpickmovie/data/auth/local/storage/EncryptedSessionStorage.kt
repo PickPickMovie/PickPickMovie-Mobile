@@ -9,9 +9,8 @@ import com.dothebestmayb.pickpickmovie.data.model.AuthToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import javax.inject.Inject
 
-class EncryptedSessionStorage @Inject constructor(
+class EncryptedSessionStorage(
     private val sharedPreferences: SharedPreferences,
 ) : SessionStorage {
 

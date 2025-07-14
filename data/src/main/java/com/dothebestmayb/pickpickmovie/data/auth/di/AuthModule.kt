@@ -1,21 +1,34 @@
 package com.dothebestmayb.pickpickmovie.data.auth.di
 
+import com.dothebestmayb.pickpickmovie.data.auth.AuthInterceptor
+import com.dothebestmayb.pickpickmovie.data.auth.TokenAuthenticator
 import com.dothebestmayb.pickpickmovie.data.auth.local.storage.EncryptedSessionStorage
 import com.dothebestmayb.pickpickmovie.data.auth.local.storage.SessionStorage
 import com.dothebestmayb.pickpickmovie.data.auth.remote.repository.AuthRepository
 import com.dothebestmayb.pickpickmovie.data.auth.remote.repository.AuthRepositoryImpl
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-internal abstract class AuthModule {
+val authModule = module {
+    single<AuthRepository> {
+        AuthRepositoryImpl(get(), get())
+    }
 
-    @Binds
-    abstract fun bindsAuthRepository(authRepositoryImpl: AuthRepositoryImpl): AuthRepository
+    single<SessionStorage> {
+        EncryptedSessionStorage(get())
+    }
 
-    @Binds
-    abstract fun bindsSessionStorage(encryptedSessionStorage: EncryptedSessionStorage): SessionStorage
+    single<AuthInterceptor> {
+        AuthInterceptor(lazy {
+            get()
+        })
+    }
+
+    single<TokenAuthenticator> {
+        TokenAuthenticator(
+            get(),
+            lazy {
+                get()
+            }
+        )
+    }
 }
