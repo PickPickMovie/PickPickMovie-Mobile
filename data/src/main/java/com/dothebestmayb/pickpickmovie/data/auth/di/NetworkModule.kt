@@ -1,27 +1,51 @@
 package com.dothebestmayb.pickpickmovie.data.auth.di
 
 import com.dothebestmayb.pickpickmovie.data.BuildConfig
+import com.dothebestmayb.pickpickmovie.data.auth.remote.interceptor.AuthInterceptor
+import com.dothebestmayb.pickpickmovie.data.auth.remote.interceptor.TokenAuthenticator
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
 import org.koin.dsl.module
-import retrofit2.Retrofit
-import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import timber.log.Timber
 
 val networkModule = module {
-    single<Json> {
-        Json {
-            ignoreUnknownKeys = true
+    single<HttpClient> {
+        HttpClient(OkHttp) {
+            engine {
+                config {
+                    addInterceptor(get<AuthInterceptor>())
+                    authenticator(get<TokenAuthenticator>())
+                }
+            }
+            if (BuildConfig.DEBUG) {
+                install(Logging) {
+                    logger = object : Logger {
+                        override fun log(message: String) {
+                            Timber.d(message)
+                        }
+                    }
+                    level = LogLevel.ALL
+                }
+            }
+
+            install(ContentNegotiation) {
+                json(
+                    json = Json {
+                        ignoreUnknownKeys = true
+                    }
+                )
+            }
+
+            defaultRequest {
+                url(BuildConfig.BASE_URL)
+            }
         }
-    }
-
-    single<Retrofit> {
-        val contentType = "application/json".toMediaType()
-
-        Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
-            .client(get<OkHttpClient>())
-            .addConverterFactory(get<Json>().asConverterFactory(contentType))
-            .build()
     }
 }

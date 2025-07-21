@@ -1,7 +1,7 @@
 package com.dothebestmayb.pickpickmovie.data.auth.di
 
-import com.dothebestmayb.pickpickmovie.data.auth.AuthInterceptor
-import com.dothebestmayb.pickpickmovie.data.auth.TokenAuthenticator
+import com.dothebestmayb.pickpickmovie.data.auth.remote.interceptor.AuthInterceptor
+import com.dothebestmayb.pickpickmovie.data.auth.remote.interceptor.TokenAuthenticator
 import com.dothebestmayb.pickpickmovie.data.auth.local.storage.EncryptedSessionStorage
 import com.dothebestmayb.pickpickmovie.data.auth.local.storage.SessionStorage
 import com.dothebestmayb.pickpickmovie.data.auth.remote.repository.AuthRepository

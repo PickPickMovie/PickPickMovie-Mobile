@@ -1,14 +1,16 @@
 package com.dothebestmayb.pickpickmovie.data.auth.remote.repository
 
-import com.dothebestmayb.pickpickmovie.data.auth.AuthService
 import com.dothebestmayb.pickpickmovie.data.auth.local.storage.SessionStorage
 import com.dothebestmayb.pickpickmovie.data.auth.mapper.toDomain
 import com.dothebestmayb.pickpickmovie.data.auth.remote.model.LoginRequestDto
 import com.dothebestmayb.pickpickmovie.data.auth.remote.model.RegisterRequestDto
+import com.dothebestmayb.pickpickmovie.data.auth.remote.service.AuthService
 import com.dothebestmayb.pickpickmovie.data.model.AuthResult
 import com.dothebestmayb.pickpickmovie.data.model.AuthToken
 import com.dothebestmayb.pickpickmovie.data.model.UserProfile
-import retrofit2.HttpException
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
+import io.ktor.http.HttpStatusCode
 
 class AuthRepositoryImpl(
     private val api: AuthService,
@@ -57,12 +59,14 @@ class AuthRepositoryImpl(
                 )
             )
             AuthResult.Authorized()
-        } catch (e: HttpException) {
-            if (e.code() == 401) { // unauthorized
+        } catch (e: ClientRequestException) { // 4xx
+            if (e.response.status == HttpStatusCode.Unauthorized) {
                 AuthResult.Unauthorized()
             } else {
                 AuthResult.UnknownError()
             }
+        } catch (e: ServerResponseException) { // 5xx
+            AuthResult.UnknownError()
         } catch (e: Exception) {
             AuthResult.UnknownError()
         }

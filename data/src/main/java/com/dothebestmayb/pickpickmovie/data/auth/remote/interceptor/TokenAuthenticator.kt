@@ -1,7 +1,8 @@
-package com.dothebestmayb.pickpickmovie.data.auth
+package com.dothebestmayb.pickpickmovie.data.auth.remote.interceptor
 
 import com.dothebestmayb.pickpickmovie.data.auth.local.storage.SessionStorage
 import com.dothebestmayb.pickpickmovie.data.auth.remote.model.RefreshRequestDto
+import com.dothebestmayb.pickpickmovie.data.auth.remote.service.AuthService
 import com.dothebestmayb.pickpickmovie.data.model.AuthToken
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator

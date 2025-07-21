@@ -1,4 +1,4 @@
-package com.dothebestmayb.pickpickmovie.data.auth
+package com.dothebestmayb.pickpickmovie.data.auth.remote.interceptor
 
 import com.dothebestmayb.pickpickmovie.data.auth.local.storage.SessionStorage
 import kotlinx.coroutines.runBlocking

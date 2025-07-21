@@ -47,13 +47,18 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.security.crptyo.ktx)
 
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.kotlinx.serialization)
     implementation(libs.okhttp3.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.logging)
 
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)
+
+    implementation(libs.timber)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
