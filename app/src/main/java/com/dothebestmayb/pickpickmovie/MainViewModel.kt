@@ -5,9 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dothebestmayb.pickpickmovie.data.auth.local.storage.SessionStorage
-import com.dothebestmayb.pickpickmovie.data.auth.remote.repository.AuthRepository
-import com.dothebestmayb.pickpickmovie.data.model.AuthResult
+import com.dothebestmayb.pickpickmovie.shared.data.storage.SessionStorage
+import com.dothebestmayb.pickpickmovie.shared.data.auth.remote.repository.AuthRepository
+import com.dothebestmayb.pickpickmovie.shared.data.model.AuthResult
 import kotlinx.coroutines.launch
 
 class MainViewModel(

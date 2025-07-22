@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.dothebestmayb.pickpickmovie.core.validation.InputFieldType
 import com.dothebestmayb.pickpickmovie.core.validation.ValidationRule
 import com.dothebestmayb.pickpickmovie.core.validation.Validator
-import com.dothebestmayb.pickpickmovie.data.auth.remote.repository.AuthRepository
-import com.dothebestmayb.pickpickmovie.data.model.AuthResult
+import com.dothebestmayb.pickpickmovie.shared.data.auth.remote.repository.AuthRepository
+import com.dothebestmayb.pickpickmovie.shared.data.model.AuthResult
 import com.dothebestmayb.pickpickmovie.ui.screen.common.FieldState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
