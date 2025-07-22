@@ -113,6 +113,8 @@ kotlin {
 
                 implementation(libs.multiplatform.settings)
                 implementation(libs.multiplatform.settings.serialization)
+
+                implementation(libs.compose.components.resources)
             }
         }
 

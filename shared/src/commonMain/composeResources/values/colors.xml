@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="app_name_color">#FFB1B8C0</color>
+    <color name="action_button_color">#FF3182F6</color>
+    <color name="action_button_content_color">#FFFFFF</color>
+    <color name="place_holder_color">#FFADB5BD</color>
+    <color name="input_text_field_background_color">#FFF7F8F9</color>
+</resources>
