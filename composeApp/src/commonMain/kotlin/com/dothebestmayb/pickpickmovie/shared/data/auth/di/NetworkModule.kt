@@ -1,6 +1,6 @@
 package com.dothebestmayb.pickpickmovie.shared.data.auth.di
 
-import com.dothebestmayb.pickpickmovie.shared.BuildConfig
+import com.dothebestmayb.pickpickmovie.composeApp.BuildConfig
 import com.dothebestmayb.pickpickmovie.shared.data.auth.remote.model.RefreshRequestDto
 import com.dothebestmayb.pickpickmovie.shared.data.auth.remote.service.AuthService
 import com.dothebestmayb.pickpickmovie.shared.data.model.AuthToken

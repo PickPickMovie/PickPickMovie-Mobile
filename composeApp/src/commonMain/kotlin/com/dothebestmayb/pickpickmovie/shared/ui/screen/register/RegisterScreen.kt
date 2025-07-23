@@ -37,19 +37,19 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import pickpickmovie_mobile.shared.generated.resources.Res
-import pickpickmovie_mobile.shared.generated.resources.app_name
-import pickpickmovie_mobile.shared.generated.resources.id_label
-import pickpickmovie_mobile.shared.generated.resources.id_placeHolder
-import pickpickmovie_mobile.shared.generated.resources.nickname_label
-import pickpickmovie_mobile.shared.generated.resources.nickname_placeholder
-import pickpickmovie_mobile.shared.generated.resources.pw_check_label
-import pickpickmovie_mobile.shared.generated.resources.pw_label
-import pickpickmovie_mobile.shared.generated.resources.pw_placeHolder
-import pickpickmovie_mobile.shared.generated.resources.register
-import pickpickmovie_mobile.shared.generated.resources.register_code_label
-import pickpickmovie_mobile.shared.generated.resources.register_fail
-import pickpickmovie_mobile.shared.generated.resources.register_success
+import pickpickmovie_mobile.composeapp.generated.resources.Res
+import pickpickmovie_mobile.composeapp.generated.resources.app_name
+import pickpickmovie_mobile.composeapp.generated.resources.id_label
+import pickpickmovie_mobile.composeapp.generated.resources.id_placeHolder
+import pickpickmovie_mobile.composeapp.generated.resources.nickname_label
+import pickpickmovie_mobile.composeapp.generated.resources.nickname_placeholder
+import pickpickmovie_mobile.composeapp.generated.resources.pw_check_label
+import pickpickmovie_mobile.composeapp.generated.resources.pw_label
+import pickpickmovie_mobile.composeapp.generated.resources.pw_placeHolder
+import pickpickmovie_mobile.composeapp.generated.resources.register
+import pickpickmovie_mobile.composeapp.generated.resources.register_code_label
+import pickpickmovie_mobile.composeapp.generated.resources.register_fail
+import pickpickmovie_mobile.composeapp.generated.resources.register_success
 
 @Composable
 fun RegisterScreenRoot(

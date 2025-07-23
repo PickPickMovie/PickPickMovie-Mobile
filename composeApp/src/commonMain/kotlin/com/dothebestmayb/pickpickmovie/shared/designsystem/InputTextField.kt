@@ -31,9 +31,9 @@ import com.dothebestmayb.pickpickmovie.shared.core.validation.ValidationRule
 import com.dothebestmayb.pickpickmovie.shared.ui.theme.InputTextFieldBackgroundColor
 import com.dothebestmayb.pickpickmovie.shared.ui.theme.PlaceHolderColor
 import org.jetbrains.compose.resources.stringResource
-import pickpickmovie_mobile.shared.generated.resources.Res
-import pickpickmovie_mobile.shared.generated.resources.hide_password
-import pickpickmovie_mobile.shared.generated.resources.show_password
+import pickpickmovie_mobile.composeapp.generated.resources.Res
+import pickpickmovie_mobile.composeapp.generated.resources.hide_password
+import pickpickmovie_mobile.composeapp.generated.resources.show_password
 
 @Composable
 fun InputTextField(

@@ -1,12 +1,12 @@
 package com.dothebestmayb.pickpickmovie.shared.core.validation
 
 import androidx.compose.ui.text.input.KeyboardType
-import pickpickmovie_mobile.shared.generated.resources.Res
-import pickpickmovie_mobile.shared.generated.resources.error_email_format
-import pickpickmovie_mobile.shared.generated.resources.error_nickname_format
-import pickpickmovie_mobile.shared.generated.resources.error_password_format
-import pickpickmovie_mobile.shared.generated.resources.error_pw_check_not_match
-import pickpickmovie_mobile.shared.generated.resources.error_register_code_empty
+import pickpickmovie_mobile.composeapp.generated.resources.Res
+import pickpickmovie_mobile.composeapp.generated.resources.error_email_format
+import pickpickmovie_mobile.composeapp.generated.resources.error_nickname_format
+import pickpickmovie_mobile.composeapp.generated.resources.error_password_format
+import pickpickmovie_mobile.composeapp.generated.resources.error_pw_check_not_match
+import pickpickmovie_mobile.composeapp.generated.resources.error_register_code_empty
 
 object InputPolicy {
 

@@ -20,4 +20,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "PickPickMovie-Mobile"
-include(":shared")
+include(":composeApp")
