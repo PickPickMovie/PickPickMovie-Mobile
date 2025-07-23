@@ -7,7 +7,7 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.9.2"
 activityCompose = "1.10.1"
-navigationCompose = "2.9.2"
+androidNavigationCompose = "2.9.2"
 composeBom = "2025.07.00"
 appcompat = "1.7.1"
 material = "1.12.0"
@@ -30,6 +30,11 @@ kotlinTest = "2.2.0"
 runner = "1.5.2"
 core = "1.5.0"
 componentsResources = "1.9.0-alpha03"
+viewmodelCompose = "2.9.1"
+navigationCompose = "2.9.0-beta03"
+material3 = "1.9.0-alpha04"
+materialIconsExtended = "1.7.3"
+composeMultiplatform = "1.8.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,7 +45,7 @@ androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecyc
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
-androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidNavigationCompose" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 
@@ -66,8 +71,9 @@ ktor-client-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref =
 ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
 
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
-koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
-koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koin" }
 
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
@@ -80,6 +86,10 @@ androidx-runner = { group = "androidx.test", name = "runner", version.ref = "run
 androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 
 compose-components-resources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "componentsResources" }
+lifecycle-viewmodel-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "viewmodelCompose" }
+navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "material3"}
+material-icons-extended = { group = "org.jetbrains.compose.material", name = "material-icons-extended", version.ref = "materialIconsExtended"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -90,4 +100,4 @@ jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrai
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }

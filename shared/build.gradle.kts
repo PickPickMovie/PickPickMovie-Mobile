@@ -1,6 +1,11 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.serialization)
 }
 
@@ -41,24 +46,7 @@ val buildConfigGenerator by tasks.registering(Sync::class) {
 }
 
 kotlin {
-
-    // Target declarations - add or remove as needed below. These define
-    // which platforms this KMP module supports.
-    // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
-    androidLibrary {
-        namespace = "com.dothebestmayb.pickpickmovie.shared"
-        compileSdk = 35
-        minSdk = 28
-
-        withHostTestBuilder {
-        }
-
-        withDeviceTestBuilder {
-            sourceSetTreeName = "test"
-        }.configure {
-            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        }
-    }
+    androidTarget()
 
     // For iOS targets, this is also where you should
     // configure native binary output. For more information, see:
@@ -110,11 +98,19 @@ kotlin {
                 implementation(libs.ktor.client.auth)
 
                 implementation(libs.koin.core)
+                implementation(libs.koin.compose)
+                implementation(libs.koin.compose.viewmodel)
+                implementation(libs.koin.compose.viewmodel.navigation)
 
                 implementation(libs.multiplatform.settings)
                 implementation(libs.multiplatform.settings.serialization)
 
                 implementation(libs.compose.components.resources)
+                implementation(libs.lifecycle.viewmodel.compose)
+                implementation(libs.navigation.compose)
+                implementation(libs.material3)
+
+                implementation(libs.material.icons.extended)
             }
         }
 
@@ -130,22 +126,15 @@ kotlin {
                 // Add Android-specific dependencies here. Note that this source set depends on
                 // commonMain by default and will correctly pull the Android artifacts of any KMP
                 // dependencies declared in commonMain.
+                implementation(libs.androidx.ui.tooling)
+                implementation(libs.androidx.ui.tooling.preview)
+
                 implementation(libs.okhttp3.logging.interceptor)
                 implementation(libs.ktor.client.okhttp)
-
-                implementation(libs.koin.androidx.compose)
 
                 implementation(libs.timber)
 
                 implementation(libs.androidx.security.crptyo.ktx)
-            }
-        }
-
-        getByName("androidDeviceTest") {
-            dependencies {
-                implementation(libs.androidx.runner)
-                implementation(libs.androidx.core)
-                implementation(libs.androidx.junit)
             }
         }
 
@@ -160,4 +149,65 @@ kotlin {
             }
         }
     }
+}
+
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+}
+
+android {
+    namespace = "com.dothebestmayb.pickpickmovie"
+    compileSdk = 35
+
+    defaultConfig {
+        applicationId = "com.dothebestmayb.pickpickmovie"
+        minSdk = 28
+        targetSdk = 35
+        versionCode = 1
+        versionName = "1.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    sourceSets["main"].res.srcDirs("src/androidMain/res")
+    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
+
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+
+    buildFeatures {
+        compose = true
+        buildConfig = true
+    }
+
+    applicationVariants.all {
+        val variantName = name
+        sourceSets {
+            getByName("main") {
+                java.srcDir(File("build/generated/ksp/$variantName/kotlin"))
+            }
+        }
+    }
+    ksp {
+        arg("KOIN_CONFIG_CHECK", "true")
+    }
+}
+
+// Gradle이 컴파일 전에 반드시 이 태스크를 실행하도록 설정
+tasks.withType<KotlinCompile>().configureEach {
+    dependsOn(buildConfigGenerator)
 }
