@@ -18,11 +18,14 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.encodedPath
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 expect fun platformLogger(): Logger
 
 expect fun platformHttpEngine(): HttpClientEngine
+
+internal const val AUTH_HTTP_CLIENT = "AuthHttpClient"
 
 val networkModule = module {
     single<HttpClient> {
@@ -34,6 +37,21 @@ val networkModule = module {
             authService = get(),
             baseUrl = BuildConfig.BASE_URL,
         )
+    }
+
+    single<HttpClient>(named(AUTH_HTTP_CLIENT)) {
+        HttpClient(get()) {
+            install(ContentNegotiation) {
+                json(get())
+            }
+            install(Logging) {
+                this.logger = get()
+                level = LogLevel.ALL
+            }
+            defaultRequest {
+                url(BuildConfig.BASE_URL)
+            }
+        }
     }
 
     single<Json> {
