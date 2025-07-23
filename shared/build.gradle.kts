@@ -128,6 +128,7 @@ kotlin {
                 // dependencies declared in commonMain.
                 implementation(libs.androidx.ui.tooling)
                 implementation(libs.androidx.ui.tooling.preview)
+                implementation(libs.androidx.core.splashscreen)
 
                 implementation(libs.okhttp3.logging.interceptor)
                 implementation(libs.ktor.client.okhttp)

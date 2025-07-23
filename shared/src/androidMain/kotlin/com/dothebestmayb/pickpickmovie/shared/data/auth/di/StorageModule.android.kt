@@ -5,6 +5,9 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.dothebestmayb.pickpickmovie.shared.data.storage.EncryptedSessionStorage
 import com.dothebestmayb.pickpickmovie.shared.data.storage.SessionStorage
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.Module
+import org.koin.dsl.module
 
 private const val PREFERENCES_FILE_NAME = "secure_session_prefs"
 
@@ -13,9 +16,7 @@ private const val PREFERENCES_FILE_NAME = "secure_session_prefs"
  *
  * https://proandroiddev.com/securing-the-future-navigating-the-deprecation-of-encrypted-shared-preferences-91ce3c20ae8d
  */
-actual fun createSessionStorage(dependencies: PlatformDependencies): SessionStorage {
-    val context = dependencies.context
-
+fun createSessionStorage(context: Context): SessionStorage {
     val masterKey = MasterKey.Builder(context)
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         .build()
@@ -31,4 +32,8 @@ actual fun createSessionStorage(dependencies: PlatformDependencies): SessionStor
     return EncryptedSessionStorage(sharedPreferences)
 }
 
-actual class PlatformDependencies(val context: Context)
+actual fun storageModule(): Module = module {
+    single<SessionStorage> {
+        createSessionStorage(androidContext())
+    }
+}

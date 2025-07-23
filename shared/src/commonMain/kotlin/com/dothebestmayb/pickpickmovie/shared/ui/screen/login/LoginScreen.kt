@@ -21,7 +21,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dothebestmayb.pickpickmovie.shared.core.context.PlatformContext
 import com.dothebestmayb.pickpickmovie.shared.core.toast.ToastDurationType
 import com.dothebestmayb.pickpickmovie.shared.core.toast.ToastManager
 import com.dothebestmayb.pickpickmovie.shared.core.validation.InputFieldType
@@ -51,7 +50,6 @@ import pickpickmovie_mobile.shared.generated.resources.register
 fun LoginScreenRoot(
     onLoginSuccess: () -> Unit,
     onRegisterClick: () -> Unit,
-    platformContext: PlatformContext,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = koinViewModel(),
     toastManager: ToastManager = koinInject(),

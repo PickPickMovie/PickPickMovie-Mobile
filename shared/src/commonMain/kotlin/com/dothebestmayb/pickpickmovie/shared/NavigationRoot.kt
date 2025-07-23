@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.dothebestmayb.pickpickmovie.shared.core.context.PlatformContext
 import com.dothebestmayb.pickpickmovie.shared.ui.screen.home.HomeScreenRoot
 import com.dothebestmayb.pickpickmovie.shared.ui.screen.login.LoginScreenRoot
 import com.dothebestmayb.pickpickmovie.shared.ui.screen.register.RegisterScreenRoot
@@ -23,7 +22,6 @@ object Home
 fun NavigationRoot(
     navController: NavHostController,
     isLoggedIn: Boolean,
-    platformContext: PlatformContext,
 ) {
     NavHost(
         navController = navController,
@@ -40,7 +38,6 @@ fun NavigationRoot(
                 onRegisterClick = {
                     navController.navigate(Register)
                 },
-                platformContext = platformContext,
             )
         }
         composable<Register> {
