@@ -1,6 +1,8 @@
 package com.dothebestmayb.pickpickmovie.shared.designsystem
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -134,14 +136,22 @@ fun InputTextField(
         },
         isError = isError,
         supportingText = {
-            if (isError && validationRule is ValidationRule.InputField) {
+            val errorMessage = if (isError && validationRule is ValidationRule.InputField) {
+                stringResource(validationRule.errorMessageRes)
+            } else {
+                ""
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 24.dp) // supportingText와 무관하게 동일한 height 유지하기 위한 설정
+                    .padding(top = 4.dp)
+            ) {
                 Text(
-                    text = "stringResource(validationRule.errorMessageResId)",
+                    text = errorMessage,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 36.dp, vertical = 4.dp)
                 )
             }
         }
