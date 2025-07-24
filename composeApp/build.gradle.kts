@@ -10,13 +10,23 @@ plugins {
 }
 
 val baseUrlProvider = provider {
-    val isRelease = gradle.startParameter.taskNames.any {
-        it.contains("release", ignoreCase = true)
+    val taskNames = gradle.startParameter.taskNames
+    val isRelease = taskNames.any { it.contains("release", ignoreCase = true) }
+
+    val isIosBuild = taskNames.any {
+        it.contains("ios", ignoreCase = true) ||
+                it.contains("xcode", ignoreCase = true) ||
+                it.contains("embed", ignoreCase = true)
     }
+
     if (isRelease) {
         "https://pickpickmovie.com"
     } else {
-        "http://10.0.2.2:8085"
+        if (isIosBuild) {
+            "http://localhost:8085"
+        } else {
+            "http://10.0.2.2:8085"
+        }
     }
 }
 
