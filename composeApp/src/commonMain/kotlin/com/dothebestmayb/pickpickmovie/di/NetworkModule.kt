@@ -115,8 +115,9 @@ fun createAuthenticatedClient(
                     }
                 }
 
+                // true일 경우, 서버로부터 401 응답을 받지 않아도 헤더에 jwt token을 추가한다.
                 sendWithoutRequest { request ->
-                    request.url.encodedPath.contains("/auth/refresh")
+                    !request.url.encodedPath.contains("/auth/refresh")
                 }
             }
         }
