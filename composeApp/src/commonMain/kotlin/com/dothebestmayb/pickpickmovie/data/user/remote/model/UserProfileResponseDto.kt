@@ -1,4 +1,4 @@
-package com.dothebestmayb.pickpickmovie.data.auth.remote.model
+package com.dothebestmayb.pickpickmovie.data.user.remote.model
 
 import kotlinx.serialization.Serializable
 

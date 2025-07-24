@@ -6,7 +6,6 @@ import com.dothebestmayb.pickpickmovie.data.auth.local.model.AuthEntity
 import com.dothebestmayb.pickpickmovie.data.auth.mapper.toDomain
 import com.dothebestmayb.pickpickmovie.data.auth.mapper.toEntity
 import com.dothebestmayb.pickpickmovie.data.model.AuthToken
-import com.dothebestmayb.pickpickmovie.data.storage.SessionStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json

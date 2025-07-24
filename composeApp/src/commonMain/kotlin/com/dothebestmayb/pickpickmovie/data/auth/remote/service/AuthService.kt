@@ -5,7 +5,6 @@ import com.dothebestmayb.pickpickmovie.data.auth.remote.model.LoginResponseDto
 import com.dothebestmayb.pickpickmovie.data.auth.remote.model.RefreshRequestDto
 import com.dothebestmayb.pickpickmovie.data.auth.remote.model.RegisterRequestDto
 import com.dothebestmayb.pickpickmovie.data.auth.remote.model.RegisterResponseDto
-import com.dothebestmayb.pickpickmovie.data.auth.remote.model.UserProfileResponseDto
 
 interface AuthService {
 
@@ -14,6 +13,4 @@ interface AuthService {
     suspend fun login(request: LoginRequestDto): LoginResponseDto
 
     suspend fun refresh(request: RefreshRequestDto): LoginResponseDto
-
-    suspend fun getUserProfile(): UserProfileResponseDto
 }

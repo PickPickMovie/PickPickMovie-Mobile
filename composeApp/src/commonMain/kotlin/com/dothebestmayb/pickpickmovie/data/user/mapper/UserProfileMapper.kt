@@ -1,7 +1,7 @@
-package com.dothebestmayb.pickpickmovie.data.auth.mapper
+package com.dothebestmayb.pickpickmovie.data.user.mapper
 
-import com.dothebestmayb.pickpickmovie.data.auth.remote.model.UserProfileResponseDto
 import com.dothebestmayb.pickpickmovie.data.model.UserProfile
+import com.dothebestmayb.pickpickmovie.data.user.remote.model.UserProfileResponseDto
 
 internal fun UserProfileResponseDto.toDomain(): UserProfile {
     return UserProfile(

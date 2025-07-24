@@ -1,4 +1,4 @@
-package com.dothebestmayb.pickpickmovie.data.auth.di
+package com.dothebestmayb.pickpickmovie.di
 
 import com.dothebestmayb.pickpickmovie.composeApp.BuildConfig
 import com.dothebestmayb.pickpickmovie.data.auth.remote.model.RefreshRequestDto
@@ -26,9 +26,10 @@ expect fun platformLogger(): Logger
 expect fun platformHttpEngine(): HttpClientEngine
 
 internal const val AUTH_HTTP_CLIENT = "AuthHttpClient"
+internal const val DEFAULT_HTTP_CLIENT = "DefaultHttpClient"
 
 val networkModule = module {
-    single<HttpClient> {
+    single<HttpClient>(named(DEFAULT_HTTP_CLIENT)) {
         createAuthenticatedClient(
             engine = get(),
             json = get(),
@@ -78,11 +79,6 @@ fun createAuthenticatedClient(
     baseUrl: String,
 ): HttpClient {
     return HttpClient(engine) {
-        install(Logging) {
-            this.logger = logger
-            level = LogLevel.ALL
-        }
-
         install(ContentNegotiation) {
             json(json)
         }
@@ -123,6 +119,11 @@ fun createAuthenticatedClient(
                     request.url.encodedPath.contains("/auth/refresh")
                 }
             }
+        }
+
+        install(Logging) {
+            this.logger = logger
+            level = LogLevel.ALL
         }
     }
 }

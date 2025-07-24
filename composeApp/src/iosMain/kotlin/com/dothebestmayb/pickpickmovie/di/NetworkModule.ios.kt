@@ -1,4 +1,4 @@
-package com.dothebestmayb.pickpickmovie.data.auth.di
+package com.dothebestmayb.pickpickmovie.di
 
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.darwin.Darwin

@@ -1,12 +1,10 @@
 package com.dothebestmayb.pickpickmovie.data.auth.remote.repository
 
-import com.dothebestmayb.pickpickmovie.data.auth.mapper.toDomain
 import com.dothebestmayb.pickpickmovie.data.auth.remote.model.LoginRequestDto
 import com.dothebestmayb.pickpickmovie.data.auth.remote.model.RegisterRequestDto
 import com.dothebestmayb.pickpickmovie.data.auth.remote.service.AuthService
 import com.dothebestmayb.pickpickmovie.data.model.AuthResult
 import com.dothebestmayb.pickpickmovie.data.model.AuthToken
-import com.dothebestmayb.pickpickmovie.data.model.UserProfile
 import com.dothebestmayb.pickpickmovie.data.storage.SessionStorage
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
@@ -69,15 +67,6 @@ class AuthRepositoryImpl(
             AuthResult.UnknownError()
         } catch (e: Exception) {
             AuthResult.UnknownError()
-        }
-    }
-
-    override suspend fun getUserProfile(): AuthResult<UserProfile> {
-        return try {
-            val userProfile = api.getUserProfile().toDomain()
-            AuthResult.Authorized(userProfile)
-        } catch (e: Exception) {
-            AuthResult.Unauthorized()
         }
     }
 }

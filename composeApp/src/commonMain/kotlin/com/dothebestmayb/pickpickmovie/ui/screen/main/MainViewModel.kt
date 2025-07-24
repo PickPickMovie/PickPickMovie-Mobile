@@ -5,14 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dothebestmayb.pickpickmovie.data.auth.remote.repository.AuthRepository
 import com.dothebestmayb.pickpickmovie.data.model.AuthResult
 import com.dothebestmayb.pickpickmovie.data.storage.SessionStorage
+import com.dothebestmayb.pickpickmovie.data.user.remote.repository.UserRepository
 import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val sessionStorage: SessionStorage,
-    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository,
 ) : ViewModel() {
 
     var state by mutableStateOf(MainState())
@@ -31,7 +31,7 @@ class MainViewModel(
                 return@launch
             }
 
-            when (val result = authRepository.getUserProfile()) {
+            when (val result = userRepository.getUserProfile()) {
                 is AuthResult.Authorized -> {
                     state = state.copy(
                         isLoggedIn = true,
