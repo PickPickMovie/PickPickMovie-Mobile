@@ -6,7 +6,6 @@
 package com.dothebestmayb.pickpickmovie.data.storage
 
 import com.dothebestmayb.pickpickmovie.data.model.AuthToken
-import com.dothebestmayb.pickpickmovie.data.storage.SessionStorage
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
 import com.russhwolf.settings.KeychainSettings
