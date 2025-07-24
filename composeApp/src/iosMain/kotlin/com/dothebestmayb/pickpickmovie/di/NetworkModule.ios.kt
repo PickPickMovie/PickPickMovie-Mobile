@@ -8,7 +8,8 @@ import platform.Foundation.NSLog
 actual fun platformLogger(): Logger {
     return object: Logger {
         override fun log(message: String) {
-            NSLog("Logger: %@", message)
+            val logMessage = "Logger: $message"
+            NSLog(logMessage)
         }
     }
 }
