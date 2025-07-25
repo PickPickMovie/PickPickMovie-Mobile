@@ -1,5 +1,6 @@
 package com.dothebestmayb.pickpickmovie.di
 
+import com.dothebestmayb.pickpickmovie.ui.screen.home.HomeViewModel
 import com.dothebestmayb.pickpickmovie.ui.screen.login.LoginViewModel
 import com.dothebestmayb.pickpickmovie.ui.screen.main.MainViewModel
 import com.dothebestmayb.pickpickmovie.ui.screen.register.RegisterViewModel
@@ -15,5 +16,8 @@ val viewModelModule = module {
     }
     viewModel {
         RegisterViewModel(get(), get())
+    }
+    viewModel {
+        HomeViewModel(get())
     }
 }

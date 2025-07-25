@@ -28,7 +28,14 @@ fun NavigationRoot(
         startDestination = if (isLoggedIn) Home else Login,
     ) {
         composable<Home> {
-            HomeScreenRoot()
+            HomeScreenRoot(
+                onLogoutSuccess = {
+                    navController.navigate(Login) {
+                        popUpTo(0)
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
         composable<Login> {
             LoginScreenRoot(

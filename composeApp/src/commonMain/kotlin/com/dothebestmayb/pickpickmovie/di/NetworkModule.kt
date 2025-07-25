@@ -110,7 +110,7 @@ fun createAuthenticatedClient(
 
                         BearerTokens(newAuthToken.accessToken, newAuthToken.refreshToken)
                     } catch (e: Exception) {
-                        sessionStorage.set(null)
+                        sessionStorage.clear()
                         null
                     }
                 }
