@@ -2,6 +2,7 @@
 
 package com.dothebestmayb.pickpickmovie.core.toast
 
+import com.dothebestmayb.pickpickmovie.core.window.currentKeyWindow
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import platform.CoreGraphics.CGPointMake
@@ -14,45 +15,48 @@ import platform.UIKit.UIScreen
 import platform.UIKit.UIView
 import platform.UIKit.UIViewAnimationOptionCurveEaseOut
 
-class IosToastManager: ToastManager {
+class IosToastManager : ToastManager {
     override fun showToast(message: String, durationType: ToastDurationType) {
         val duration = when (durationType) {
             ToastDurationType.SHORT -> 2.0
             ToastDurationType.LONG -> 5.0
         }
 
-        val rootViewController = UIApplication.Companion.sharedApplication.keyWindow?.rootViewController
+        val keyWindow = UIApplication.sharedApplication.currentKeyWindow()
+        val rootViewController = keyWindow?.rootViewController ?: return
+
         val toastLabel = UILabel(
             frame = CGRectMake(
                 0.0,
                 0.0,
-                UIScreen.Companion.mainScreen.bounds.useContents { size.width } - 40,
+                UIScreen.mainScreen.bounds.useContents { size.width } - 40,
                 35.0
             )
-        )
-        toastLabel.center = CGPointMake(
-            UIScreen.Companion.mainScreen.bounds.useContents { size.width } / 2,
-            UIScreen.Companion.mainScreen.bounds.useContents { size.height } - 100.0
-        )
-        toastLabel.textAlignment = NSTextAlignmentCenter
-        toastLabel.backgroundColor = UIColor.Companion.blackColor.colorWithAlphaComponent(0.6)
-        toastLabel.textColor = UIColor.Companion.whiteColor
-        toastLabel.text = message
-        toastLabel.alpha = 1.0
-        toastLabel.layer.cornerRadius = 15.0
-        toastLabel.clipsToBounds = true
-        rootViewController?.view?.addSubview(toastLabel)
+        ).apply {
+            center = CGPointMake(
+                UIScreen.mainScreen.bounds.useContents { size.width } / 2,
+                UIScreen.mainScreen.bounds.useContents { size.height } - 100.0
+            )
+            textAlignment = NSTextAlignmentCenter
+            backgroundColor = UIColor.blackColor.colorWithAlphaComponent(0.6)
+            textColor = UIColor.whiteColor
+            text = message
+            alpha = 1.0
+            layer.cornerRadius = 15.0
+            clipsToBounds = true
+        }
 
-        UIView.Companion.animateWithDuration(
+        rootViewController.view.addSubview(toastLabel)
+
+        UIView.animateWithDuration(
             duration = duration,
             delay = 0.1,
             options = UIViewAnimationOptionCurveEaseOut,
-            animations = {
-                toastLabel.alpha = 0.0
-            },
-            completion = {
-                if (it)
+            animations = { toastLabel.alpha = 0.0 },
+            completion = { finished ->
+                if (finished) {
                     toastLabel.removeFromSuperview()
+                }
             })
     }
 }
