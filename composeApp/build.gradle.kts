@@ -195,14 +195,6 @@ android {
         buildConfig = true
     }
 
-    applicationVariants.all {
-        val variantName = name
-        sourceSets {
-            getByName("main") {
-                java.srcDir(File("build/generated/ksp/$variantName/kotlin"))
-            }
-        }
-    }
     ksp {
         arg("KOIN_CONFIG_CHECK", "true")
     }
