@@ -136,7 +136,7 @@ kotlin {
 
                 implementation(libs.timber)
 
-                implementation(libs.androidx.security.crptyo.ktx)
+                implementation(libs.androidx.security.crpto.ktx)
             }
         }
 
